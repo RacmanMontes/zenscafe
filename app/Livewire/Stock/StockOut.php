@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Livewire\Stock;
+
+use App\Actions\Inventory\StockOutProduct;
+use App\Models\Product;
+use Livewire\Attributes\Title;
+use Livewire\Component;
+
+#[Title('Stock Out')]
+class StockOut extends Component
+{
+    public ?int $product_id = null;
+
+    public int $quantity = 1;
+
+    public ?string $reason = null;
+
+    public string $date = '';
+
+    public ?string $reference_number = null;
+
+    public ?string $notes = null;
+
+    protected function rules(): array
+    {
+        return [
+            'product_id' => ['required', 'exists:products,id'],
+            'quantity' => ['required', 'integer', 'min:1'],
+            'reason' => ['nullable', 'string', 'max:255'],
+            'date' => ['required', 'date'],
+            'reference_number' => ['nullable', 'string', 'max:50'],
+            'notes' => ['nullable', 'string', 'max:1000'],
+        ];
+    }
+
+    public function mount(): void
+    {
+        $this->date = now()->format('Y-m-d');
+    }
+
+    public function submit(StockOutProduct $action): void
+    {
+        $validated = $this->validate();
+
+        $product = Product::findOrFail($validated['product_id']);
+
+        $action->execute(
+            product: $product,
+            quantity: $validated['quantity'],
+            reason: $validated['reason'] ?? null,
+            referenceNumber: $validated['reference_number'] ?? null,
+            notes: $validated['notes'] ?? null,
+            request: request(),
+        );
+
+        session()->flash('success', __('Stock out recorded successfully. New quantity: ').$product->fresh()->quantity);
+        $this->reset(['product_id', 'quantity', 'reason', 'reference_number', 'notes']);
+        $this->date = now()->format('Y-m-d');
+    }
+
+    public function getProductsProperty()
+    {
+        return Product::where('status', 'active')
+            ->where('quantity', '>', 0)
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function render()
+    {
+        return view('livewire.stock.stock-out', [
+            'products' => $this->products,
+        ]);
+    }
+}
