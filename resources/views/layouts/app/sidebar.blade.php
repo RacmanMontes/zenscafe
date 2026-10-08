@@ -15,7 +15,7 @@
             }, 0)
         "
     >
-        <flux:sidebar sticky collapsible="true" class="cafe-sidebar border-e border-[#16382c] bg-[#0d281e] dark:border-[#133026] dark:bg-[#0a2018]">
+        <flux:sidebar sticky collapsible class="cafe-sidebar border-e border-[#16382c] bg-[#0d281e] dark:border-[#133026] dark:bg-[#0a2018]">
             <flux:sidebar.header>
                 <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
                 <flux:sidebar.collapse />

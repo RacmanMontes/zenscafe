@@ -1,4 +1,4 @@
-<div class="relative inline-block" x-data="{ open: false }" wire:poll.30s>
+<div class="contents" x-data="{ open: false }" wire:poll.30s>
     <flux:button variant="subtle" icon="bell" class="relative rounded-xl text-stone-600 hover:bg-emerald-50 hover:text-emerald-800 dark:text-stone-300 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-300 transition-colors" @click="open = !open" aria-label="{{ __('Low stock alerts') }}">
         @if($unreadCount > 0)
             <span class="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white shadow-xs animate-pulse">
@@ -12,7 +12,7 @@
         x-transition
         @click.outside="open = false"
         wire:key="alerts-panel"
-        class="absolute z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-[#E8E4DC] bg-white shadow-xl dark:border-emerald-950/40 dark:bg-[#12221b] {{ $panel === 'left' ? 'left-0' : 'right-0' }}"
+        class="absolute z-50 top-full mt-2 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-[#E8E4DC] bg-white shadow-xl dark:border-emerald-950/40 dark:bg-[#12221b] {{ $panel === 'left' ? 'left-2' : 'right-2' }}"
     >
         <div class="border-b border-[#F1EDE6] bg-gradient-to-r from-[#FAF8F5] to-[#F5F0EA] px-4 py-3.5 dark:border-emerald-900/30 dark:bg-[#0e1b15]">
             <div class="flex items-center justify-between">
