@@ -12,18 +12,25 @@
             </div>
 
             <form wire:submit="submit" class="space-y-6">
-                <flux:field>
-                    <flux:label>{{ __('Product') }}</flux:label>
-                    <flux:select wire:model="product_id">
-                        <flux:select.option value="">{{ __('Select a product') }}</flux:select.option>
-                        @foreach($products as $product)
-                            <flux:select.option value="{{ $product->id }}">
-                                {{ $product->name }} ({{ $product->sku }}) — Available: {{ $product->quantity }} {{ $product->unit }}
-                            </flux:select.option>
-                        @endforeach
-                    </flux:select>
-                    <flux:error name="product_id" />
-                </flux:field>
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <flux:field>
+                        <flux:label>{{ __('Product') }}</flux:label>
+                        <flux:select wire:model.live="product_id">
+                            <flux:select.option value="">{{ __('Select a product') }}</flux:select.option>
+                            @foreach($products as $product)
+                                <flux:select.option value="{{ $product->id }}">
+                                    {{ $product->name }} ({{ $product->sku }}) — Available: {{ $product->quantity }} {{ $product->unit }}
+                                </flux:select.option>
+                            @endforeach
+                        </flux:select>
+                        <flux:error name="product_id" />
+                    </flux:field>
+
+                    <flux:field>
+                        <flux:label>{{ __('SKU') }}</flux:label>
+                        <flux:input value="{{ $this->selectedSku }}" placeholder="{{ __('Select a product') }}" readonly />
+                    </flux:field>
+                </div>
 
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <flux:field>
@@ -46,7 +53,7 @@
 
                     <flux:field>
                         <flux:label>{{ __('Reference Number') }}</flux:label>
-                        <flux:input wire:model="reference_number" placeholder="{{ __('Optional reference') }}" />
+                        <flux:input value="{{ $reference_number }}" name="reference_number" readonly />
                         <flux:error name="reference_number" />
                     </flux:field>
                 </div>

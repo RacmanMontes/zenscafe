@@ -74,4 +74,29 @@ class InventoryTransaction extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Generate the next sequential reference number for a transaction type.
+     */
+    public static function generateReferenceNumber(TransactionType $type, ?Carbon $date = null): string
+    {
+        $date ??= now();
+
+        $prefix = match ($type) {
+            TransactionType::StockIn => 'STKIN',
+            TransactionType::StockOut => 'STKOUT',
+            TransactionType::Adjustment => 'ADJ',
+        };
+
+        $base = $prefix.'-'.$date->format('Ymd').'-';
+
+        $latest = static::query()
+            ->where('reference_number', 'like', $base.'%')
+            ->orderByDesc('reference_number')
+            ->value('reference_number');
+
+        $sequence = $latest === null ? 1 : ((int) substr((string) strrchr((string) $latest, '-'), 1)) + 1;
+
+        return $base.str_pad((string) $sequence, 3, '0', STR_PAD_LEFT);
+    }
 }

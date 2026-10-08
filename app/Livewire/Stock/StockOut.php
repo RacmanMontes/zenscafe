@@ -3,6 +3,8 @@
 namespace App\Livewire\Stock;
 
 use App\Actions\Inventory\StockOutProduct;
+use App\Enums\TransactionType;
+use App\Models\InventoryTransaction;
 use App\Models\Product;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Title;
@@ -38,6 +40,12 @@ class StockOut extends Component
     public function mount(): void
     {
         $this->date = now()->format('Y-m-d');
+        $this->reference_number = InventoryTransaction::generateReferenceNumber(TransactionType::StockOut);
+    }
+
+    public function getSelectedSkuProperty(): ?string
+    {
+        return Product::whereKey($this->product_id)->value('sku');
     }
 
     public function submit(StockOutProduct $action): void
@@ -59,6 +67,7 @@ class StockOut extends Component
         $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Stock out recorded successfully. New quantity: ').$product->fresh()->quantity);
         $this->reset(['product_id', 'quantity', 'reason', 'reference_number', 'notes']);
         $this->date = now()->format('Y-m-d');
+        $this->reference_number = InventoryTransaction::generateReferenceNumber(TransactionType::StockOut);
     }
 
     public function getProductsProperty()

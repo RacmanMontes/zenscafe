@@ -24,10 +24,11 @@ class AdjustInventory
         Product $product,
         int $adjustment,
         string $reason,
+        ?string $referenceNumber = null,
         ?string $notes = null,
         ?Request $request = null,
     ): InventoryTransaction {
-        return DB::transaction(function () use ($product, $adjustment, $reason, $notes, $request) {
+        return DB::transaction(function () use ($product, $adjustment, $reason, $referenceNumber, $notes, $request) {
             $lockedProduct = Product::whereKey($product->id)->lockForUpdate()->first();
 
             if ($lockedProduct === null) {
@@ -52,6 +53,7 @@ class AdjustInventory
                 'previous_quantity' => $previousQuantity,
                 'new_quantity' => $newQuantity,
                 'reason' => $reason,
+                'reference_number' => $referenceNumber,
                 'notes' => $notes,
                 'user_id' => $request?->user()?->id,
             ]);

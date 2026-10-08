@@ -3,6 +3,8 @@
 namespace App\Livewire\Stock;
 
 use App\Actions\Inventory\StockInProduct;
+use App\Enums\TransactionType;
+use App\Models\InventoryTransaction;
 use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Support\Carbon;
@@ -41,6 +43,12 @@ class StockIn extends Component
     public function mount(): void
     {
         $this->date = now()->format('Y-m-d');
+        $this->reference_number = InventoryTransaction::generateReferenceNumber(TransactionType::StockIn);
+    }
+
+    public function getSelectedSkuProperty(): ?string
+    {
+        return Product::whereKey($this->product_id)->value('sku');
     }
 
     public function submit(StockInProduct $action): void
@@ -62,6 +70,7 @@ class StockIn extends Component
         $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Stock in recorded successfully. New quantity: ').$product->fresh()->quantity);
         $this->reset(['product_id', 'quantity', 'supplier_id', 'reference_number', 'notes']);
         $this->date = now()->format('Y-m-d');
+        $this->reference_number = InventoryTransaction::generateReferenceNumber(TransactionType::StockIn);
     }
 
     public function getProductsProperty()
