@@ -102,7 +102,7 @@ select:focus[data-flux-control] {
 
     /* Card section header (icon + title + subtitle) */
     .cafe-section-header {
-        @apply mb-5 flex items-center justify-between;
+        @apply mb-5 flex flex-wrap items-center justify-between gap-2;
     }
 
     /* Table header row */

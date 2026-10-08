@@ -115,7 +115,7 @@
 
             <!-- Stock Movements (Last 7 Days) Chart -->
             <div class="rounded-2xl border border-[#E8E4DC] bg-white p-6 shadow-xs transition-shadow hover:shadow-md dark:border-emerald-950/40 dark:bg-[#12221B]">
-                <div class="flex items-center justify-between mb-5">
+                <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
                         <span class="flex size-9 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
                             <flux:icon name="chart-bar" class="size-5" />
@@ -223,7 +223,7 @@
             @endphp
 
             <div class="rounded-2xl border border-[#E8E4DC] bg-white p-6 shadow-xs transition-shadow hover:shadow-md dark:border-emerald-950/40 dark:bg-[#12221B]">
-                <div class="flex items-center justify-between mb-5">
+                <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
                         <span class="flex size-9 items-center justify-center rounded-xl bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300">
                             <flux:icon name="folder" class="size-5" />
@@ -320,7 +320,7 @@
 
         <!-- Recent Transactions Table Card -->
         <div class="rounded-2xl border border-[#E8E4DC] bg-white p-6 shadow-xs transition-shadow hover:shadow-md dark:border-emerald-950/40 dark:bg-[#12221B]">
-            <div class="mb-5 flex items-center justify-between">
+            <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <span class="flex size-9 items-center justify-center rounded-xl bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
                         <flux:icon name="clock" class="size-5" />
@@ -404,12 +404,12 @@
 
         <!-- Recently Added Products Table Card -->
         <div class="rounded-2xl border border-[#E8E4DC] bg-white p-6 shadow-xs transition-shadow hover:shadow-md dark:border-emerald-950/40 dark:bg-[#12221B]">
-            <div class="mb-5 flex items-center justify-between">
+            <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div class="flex items-center gap-3">
                     <span class="flex size-9 items-center justify-center rounded-xl bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-300">
                         <flux:icon name="cube" class="size-5" />
                     </span>
-                    <div>
+                    <div class="min-w-0">
                         <h3 class="text-base font-bold text-[#0D3326] dark:text-emerald-100">{{ __('Recently Added Products') }}</h3>
                         <p class="text-xs text-stone-500 dark:text-emerald-300/70">{{ __('Newest catalogue items and inventory levels') }}</p>
                     </div>

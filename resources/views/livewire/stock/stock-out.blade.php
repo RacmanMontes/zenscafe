@@ -38,8 +38,8 @@
                         </span>
                         <flux:field class="flex-1">
                             <flux:label>{{ __('Scan Product') }}</flux:label>
-                            <div class="flex gap-2">
-                                <flux:input wire:model.live="scan" wire:keydown.enter.prevent="handleScan" class="flex-1" placeholder="{{ __('Scan QR or type SKU, then press Enter') }}" />
+                            <div class="flex flex-col gap-2 sm:flex-row">
+                                <flux:input wire:model.live="scan" wire:keydown.enter.prevent="handleScan" class="min-w-0 flex-1" placeholder="{{ __('Scan QR or type SKU, then press Enter') }}" />
                                 <flux:button type="button" variant="danger" icon="camera" x-on:click="startScanner()" class="shrink-0 rounded-xl">
                                     {{ __('Camera') }}
                                 </flux:button>
