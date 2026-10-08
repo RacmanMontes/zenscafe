@@ -41,16 +41,6 @@
                 <flux:sidebar.item icon="truck" :href="route('suppliers.index')" :current="request()->routeIs('suppliers.*')" wire:navigate>
                     {{ __('Suppliers') }}
                 </flux:sidebar.item>
-
-                <div class="grid px-3 pt-4 pb-1.5 in-data-flux-sidebar-collapsed-desktop:hidden">
-                    <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-300/70 leading-none">{{ __('Stock') }}</div>
-                </div>
-                <flux:sidebar.item icon="arrow-down-tray" :href="route('stock-in')" :current="request()->routeIs('stock-in')" wire:navigate>
-                    {{ __('Stock In') }}
-                </flux:sidebar.item>
-                <flux:sidebar.item icon="arrow-up-tray" :href="route('stock-out')" :current="request()->routeIs('stock-out')" wire:navigate>
-                    {{ __('Stock Out') }}
-                </flux:sidebar.item>
                 @if(auth()->user()->isAdmin())
                     <flux:sidebar.item icon="adjustments-horizontal" :href="route('stock-adjustment')" :current="request()->routeIs('stock-adjustment')" wire:navigate>
                         {{ __('Adjustment') }}
@@ -73,9 +63,6 @@
                     </div>
                     <flux:sidebar.item icon="users" :href="route('users.index')" :current="request()->routeIs('users.*')" wire:navigate>
                         {{ __('Users') }}
-                    </flux:sidebar.item>
-                    <flux:sidebar.item icon="shield-check" :href="route('audit-logs')" :current="request()->routeIs('audit-logs')" wire:navigate>
-                        {{ __('Audit Logs') }}
                     </flux:sidebar.item>
                 @endif
             </flux:sidebar.nav>
