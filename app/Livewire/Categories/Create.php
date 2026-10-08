@@ -3,10 +3,8 @@
 namespace App\Livewire\Categories;
 
 use App\Actions\Category\CreateCategory;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Add Category')]
 class Create extends Component
 {
     public string $name = '';
@@ -30,8 +28,15 @@ class Create extends Component
 
         $action->execute($validated, request());
 
-        session()->flash('success', __('Category created successfully.'));
-        $this->redirectRoute('categories.index');
+        $this->reset();
+
+        $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Category created successfully.'));
+        $this->dispatch('categoryCreated')->to(Index::class);
+    }
+
+    public function cancelCreate(): void
+    {
+        $this->dispatch('cancelCategoryCreate')->to(Index::class);
     }
 
     public function render()

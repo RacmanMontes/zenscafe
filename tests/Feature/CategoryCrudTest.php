@@ -18,9 +18,34 @@ test('staff can create a category via livewire', function () {
     Livewire::test(Create::class)
         ->set('name', 'Test Category')
         ->set('description', 'A test category')
-        ->call('save');
+        ->call('save')
+        ->assertDispatched('zenscafe-toast', variant: 'success', title: 'Success', text: 'Category created successfully.');
 
     $this->assertDatabaseHas('categories', ['name' => 'Test Category']);
+});
+
+test('category create page was replaced by an inline modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user)->get('/categories/create')->assertNotFound();
+});
+
+test('staff can open the create category modal from the index', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openCreateModal')
+        ->assertSet('showCreateModal', true);
+});
+
+test('creating a category closes the create modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openCreateModal')
+        ->assertSet('showCreateModal', true)
+        ->dispatch('categoryCreated')
+        ->assertSet('showCreateModal', false);
 });
 
 test('staff can update a category via livewire', function () {

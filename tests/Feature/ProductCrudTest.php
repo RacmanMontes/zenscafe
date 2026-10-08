@@ -5,6 +5,7 @@ use App\Actions\Product\ArchiveProduct;
 use App\Actions\Product\CreateProduct;
 use App\Livewire\Products\Create;
 use App\Livewire\Products\Edit;
+use App\Livewire\Products\Index;
 use App\Livewire\Products\Show;
 use App\Models\Category;
 use App\Models\Product;
@@ -35,9 +36,42 @@ test('staff can create a product via livewire', function () {
         ->set('quantity', 10)
         ->set('min_stock', 5)
         ->set('status', 'active')
-        ->call('save');
+        ->call('save')
+        ->assertDispatched('zenscafe-toast', variant: 'success', title: 'Success', text: 'Product created successfully.');
 
     $this->assertDatabaseHas('products', ['name' => 'Test Product', 'sku' => 'TEST-001']);
+});
+
+test('product create page was replaced by an inline modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user)->get('/products/create')->assertNotFound();
+});
+
+test('staff can open the create product modal from the index', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openCreateModal')
+        ->assertSet('showCreateModal', true);
+});
+
+test('products index opens the create modal via the create query param', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+
+    Livewire::actingAs($user)->withQueryParams(['create' => 1])->test(Index::class)
+        ->assertSet('showCreateModal', true)
+        ->assertSee('Add New Product');
+});
+
+test('creating a product closes the create modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openCreateModal')
+        ->assertSet('showCreateModal', true)
+        ->dispatch('productCreated')
+        ->assertSet('showCreateModal', false);
 });
 
 test('staff can update a product via livewire', function () {

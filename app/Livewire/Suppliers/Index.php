@@ -4,6 +4,7 @@ namespace App\Livewire\Suppliers;
 
 use App\Actions\Supplier\ArchiveSupplier;
 use App\Models\Supplier;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -20,6 +21,25 @@ class Index extends Component
     public bool $showArchiveModal = false;
 
     public ?int $supplierToArchive = null;
+
+    public bool $showCreateModal = false;
+
+    public function openCreateModal(): void
+    {
+        $this->showCreateModal = true;
+    }
+
+    #[On('supplierCreated')]
+    public function supplierCreated(): void
+    {
+        $this->showCreateModal = false;
+    }
+
+    #[On('cancelSupplierCreate')]
+    public function cancelSupplierCreate(): void
+    {
+        $this->showCreateModal = false;
+    }
 
     public function updatedSearch(): void
     {

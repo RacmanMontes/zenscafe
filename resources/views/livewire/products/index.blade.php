@@ -54,7 +54,7 @@
                     <h3 class="mt-4 text-base font-bold text-[#0D3326] dark:text-emerald-100">{{ __('No products found') }}</h3>
                     <p class="mt-1 text-sm text-stone-500 dark:text-emerald-300/60">{{ __('Get started by adding your first product.') }}</p>
                     <div class="mt-5">
-                        <flux:button variant="primary" icon="plus" :href="route('products.create')" wire:navigate class="rounded-xl">
+                        <flux:button variant="primary" icon="plus" @click="$wire.openCreateModal()" class="rounded-xl">
                             {{ __('Add Product') }}
                         </flux:button>
                     </div>
@@ -146,6 +146,13 @@
         </div>
     </div>
 
+    <!-- Create Product Modal -->
+    <flux:modal wire:model.self="showCreateModal" class="rounded-2xl p-6 w-full sm:max-w-3xl">
+        @if($showCreateModal)
+            <livewire:products.create :key="'product-create-form'" />
+        @endif
+    </flux:modal>
+
     <div
         wire:ignore
         x-data="floatingActionButton()"
@@ -160,8 +167,8 @@
             @click="onClick($event)"
         >
             <a
-                href="{{ route('products.create') }}"
-                wire:navigate
+                href="#"
+                @click.prevent="$wire.openCreateModal()"
                 title="{{ __('Add Product') }}"
                 aria-label="{{ __('Add Product') }}"
                 class="group flex h-10 min-w-10 cursor-grab select-none items-center justify-center overflow-hidden rounded-full bg-emerald-700 text-white no-underline shadow-lg shadow-emerald-900/25 transition-all duration-300 ease-out hover:justify-start hover:pl-4 hover:pr-5 hover:bg-emerald-800 active:cursor-grabbing dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"

@@ -4,6 +4,7 @@ namespace App\Livewire\Categories;
 
 use App\Actions\Category\ArchiveCategory;
 use App\Models\Category;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -20,6 +21,25 @@ class Index extends Component
     public bool $showArchiveModal = false;
 
     public ?int $categoryToArchive = null;
+
+    public bool $showCreateModal = false;
+
+    public function openCreateModal(): void
+    {
+        $this->showCreateModal = true;
+    }
+
+    #[On('categoryCreated')]
+    public function categoryCreated(): void
+    {
+        $this->showCreateModal = false;
+    }
+
+    #[On('cancelCategoryCreate')]
+    public function cancelCategoryCreate(): void
+    {
+        $this->showCreateModal = false;
+    }
 
     public function updatedSearch(): void
     {

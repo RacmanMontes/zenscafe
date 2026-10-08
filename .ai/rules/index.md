@@ -7,5 +7,6 @@ Before planning or editing, find the row whose globs match the file's path and r
 | config/fortify.php | .ai/rules/config.md |
 | resources/views/livewire/** | .ai/rules/livewire.md |
 | app/Policies/** | .ai/rules/policies.md |
-| public/index.php | .ai/rules/public.md |
+| .htaccess, public/** | .ai/rules/public.md |
+| app/Livewire/Products/**,app/Livewire/Categories/**,app/Livewire/Suppliers/** | .ai/rules/suppliers.md |
 | app/Actions/User/** | .ai/rules/user.md |

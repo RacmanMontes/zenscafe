@@ -20,9 +20,34 @@ test('staff can create a supplier via livewire', function () {
         ->set('contact_person', 'John Doe')
         ->set('email', 'john@test.com')
         ->set('phone', '555-0000')
-        ->call('save');
+        ->call('save')
+        ->assertDispatched('zenscafe-toast', variant: 'success', title: 'Success', text: 'Supplier created successfully.');
 
     $this->assertDatabaseHas('suppliers', ['name' => 'Test Supplier']);
+});
+
+test('supplier create page was replaced by an inline modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user)->get('/suppliers/create')->assertNotFound();
+});
+
+test('staff can open the create supplier modal from the index', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openCreateModal')
+        ->assertSet('showCreateModal', true);
+});
+
+test('creating a supplier closes the create modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openCreateModal')
+        ->assertSet('showCreateModal', true)
+        ->dispatch('supplierCreated')
+        ->assertSet('showCreateModal', false);
 });
 
 test('staff can update a supplier via livewire', function () {

@@ -24,7 +24,7 @@
                     <h3 class="mt-4 text-base font-bold text-[#0D3326] dark:text-emerald-100">{{ __('No categories found') }}</h3>
                     <p class="mt-1 text-sm text-stone-500 dark:text-emerald-300/60">{{ __('Get started by adding your first category.') }}</p>
                     <div class="mt-5">
-                        <flux:button variant="primary" icon="plus" :href="route('categories.create')" wire:navigate class="rounded-xl">
+                        <flux:button variant="primary" icon="plus" @click="$wire.openCreateModal()" class="rounded-xl">
                             {{ __('Add Category') }}
                         </flux:button>
                     </div>
@@ -114,6 +114,13 @@
         </div>
     </flux:modal>
 
+    <!-- Create Category Modal -->
+    <flux:modal wire:model.self="showCreateModal" class="rounded-2xl p-6 w-full sm:max-w-lg">
+        @if($showCreateModal)
+            <livewire:categories.create :key="'category-create-form'" />
+        @endif
+    </flux:modal>
+
     <div
         wire:ignore
         x-data="floatingActionButton()"
@@ -128,8 +135,8 @@
             @click="onClick($event)"
         >
             <a
-                href="{{ route('categories.create') }}"
-                wire:navigate
+                href="#"
+                @click.prevent="$wire.openCreateModal()"
                 title="{{ __('Add Category') }}"
                 aria-label="{{ __('Add Category') }}"
                 class="group flex h-10 min-w-10 cursor-grab select-none items-center justify-center overflow-hidden rounded-full bg-emerald-700 text-white no-underline shadow-lg shadow-emerald-900/25 transition-all duration-300 ease-out hover:justify-start hover:pl-4 hover:pr-5 hover:bg-emerald-800 active:cursor-grabbing dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400"

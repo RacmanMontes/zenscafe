@@ -3,10 +3,8 @@
 namespace App\Livewire\Suppliers;
 
 use App\Actions\Supplier\CreateSupplier;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Add Supplier')]
 class Create extends Component
 {
     public string $name = '';
@@ -42,8 +40,15 @@ class Create extends Component
 
         $action->execute($validated, request());
 
-        session()->flash('success', __('Supplier created successfully.'));
-        $this->redirectRoute('suppliers.index');
+        $this->reset();
+
+        $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Supplier created successfully.'));
+        $this->dispatch('supplierCreated')->to(Index::class);
+    }
+
+    public function cancelCreate(): void
+    {
+        $this->dispatch('cancelSupplierCreate')->to(Index::class);
     }
 
     public function render()

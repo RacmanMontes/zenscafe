@@ -2,12 +2,10 @@
 
 use App\Http\Controllers\InventoryReportExportController;
 use App\Livewire\Audit\Index as AuditIndex;
-use App\Livewire\Categories\Create as CategoryCreate;
 use App\Livewire\Categories\Edit as CategoryEdit;
 use App\Livewire\Categories\Index as CategoryIndex;
 use App\Livewire\Dashboard\Index as DashboardIndex;
 use App\Livewire\History\Index as HistoryIndex;
-use App\Livewire\Products\Create as ProductCreate;
 use App\Livewire\Products\Edit as ProductEdit;
 use App\Livewire\Products\Index as ProductIndex;
 use App\Livewire\Products\Show as ProductShow;
@@ -18,7 +16,6 @@ use App\Livewire\Reports\StockMovement;
 use App\Livewire\Stock\Adjustment;
 use App\Livewire\Stock\StockIn;
 use App\Livewire\Stock\StockOut;
-use App\Livewire\Suppliers\Create as SupplierCreate;
 use App\Livewire\Suppliers\Edit as SupplierEdit;
 use App\Livewire\Suppliers\Index as SupplierIndex;
 use App\Livewire\Suppliers\Show as SupplierShow;
@@ -34,18 +31,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Products
     Route::get('products', ProductIndex::class)->name('products.index');
-    Route::get('products/create', ProductCreate::class)->name('products.create');
     Route::get('products/{product}', ProductShow::class)->name('products.show');
     Route::get('products/{product}/edit', ProductEdit::class)->name('products.edit');
 
     // Categories
     Route::get('categories', CategoryIndex::class)->name('categories.index');
-    Route::get('categories/create', CategoryCreate::class)->name('categories.create');
     Route::get('categories/{category}/edit', CategoryEdit::class)->name('categories.edit');
 
     // Suppliers
     Route::get('suppliers', SupplierIndex::class)->name('suppliers.index');
-    Route::get('suppliers/create', SupplierCreate::class)->name('suppliers.create');
     Route::get('suppliers/{supplier}', SupplierShow::class)->name('suppliers.show');
     Route::get('suppliers/{supplier}/edit', SupplierEdit::class)->name('suppliers.edit');
 

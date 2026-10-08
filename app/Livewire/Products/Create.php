@@ -5,10 +5,8 @@ namespace App\Livewire\Products;
 use App\Actions\Product\CreateProduct;
 use App\Models\Category;
 use App\Models\Supplier;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Add Product')]
 class Create extends Component
 {
     public string $name = '';
@@ -72,8 +70,15 @@ class Create extends Component
 
         $action->execute($validated, request());
 
-        session()->flash('success', __('Product created successfully.'));
-        $this->redirectRoute('products.index');
+        $this->reset();
+
+        $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Product created successfully.'));
+        $this->dispatch('productCreated')->to(Index::class);
+    }
+
+    public function cancelCreate(): void
+    {
+        $this->dispatch('cancelProductCreate')->to(Index::class);
     }
 
     public function render()

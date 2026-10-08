@@ -5,6 +5,7 @@ namespace App\Livewire\Products;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Supplier;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -25,6 +26,30 @@ class Index extends Component
     public string $stockFilter = '';
 
     public int $perPage = 15;
+
+    public bool $showCreateModal = false;
+
+    public function mount(): void
+    {
+        $this->showCreateModal = request()->boolean('create');
+    }
+
+    public function openCreateModal(): void
+    {
+        $this->showCreateModal = true;
+    }
+
+    #[On('productCreated')]
+    public function productCreated(): void
+    {
+        $this->showCreateModal = false;
+    }
+
+    #[On('cancelProductCreate')]
+    public function cancelProductCreate(): void
+    {
+        $this->showCreateModal = false;
+    }
 
     public function updatedSearch(): void
     {
