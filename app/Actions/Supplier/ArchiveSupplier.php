@@ -21,11 +21,15 @@ class ArchiveSupplier
             throw new \DomainException('Cannot archive supplier that has products. Remove or reassign products first.');
         }
 
-        $supplier->delete();
+        $oldValues = ['status' => $supplier->status];
+
+        $supplier->update(['status' => Supplier::STATUS_ARCHIVED]);
 
         $this->auditService->log(
             event: 'archived',
             auditable: $supplier,
+            oldValues: $oldValues,
+            newValues: ['status' => Supplier::STATUS_ARCHIVED],
             request: $request,
         );
 

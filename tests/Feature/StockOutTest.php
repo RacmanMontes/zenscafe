@@ -3,6 +3,7 @@
 use App\Actions\Inventory\StockOutProduct;
 use App\Models\Product;
 use App\Models\User;
+use App\Notifications\LowStockNotification;
 
 test('staff can access stock-out page', function () {
     $user = User::factory()->staff()->create(['email_verified_at' => now()]);
@@ -70,4 +71,45 @@ test('stock out with exact available stock works', function () {
     );
 
     $this->assertEquals(0, $product->fresh()->quantity);
+});
+
+test('stock out that drops a product to low stock notifies verified users', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $product = Product::factory()->create(['quantity' => 10, 'min_stock' => 5]);
+
+    app(StockOutProduct::class)->execute(product: $product, quantity: 6);
+
+    $this->assertDatabaseHas('notifications', [
+        'type' => LowStockNotification::class,
+        'notifiable_id' => $user->id,
+        'notifiable_type' => User::class,
+    ]);
+});
+
+test('stock out that stays above minimum stock does not notify users', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $product = Product::factory()->create(['quantity' => 20, 'min_stock' => 5]);
+
+    app(StockOutProduct::class)->execute(product: $product, quantity: 5);
+
+    expect($user->notifications()->count())->toBe(0);
+});
+
+test('stock out that keeps a product low does not duplicate notifications', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $product = Product::factory()->create(['quantity' => 10, 'min_stock' => 5]);
+
+    app(StockOutProduct::class)->execute(product: $product, quantity: 6);
+    app(StockOutProduct::class)->execute(product: $product, quantity: 1);
+
+    expect($user->notifications()->where('type', LowStockNotification::class)->count())->toBe(1);
+});
+
+test('low stock alerts from stock out only go to verified users', function () {
+    $unverified = User::factory()->staff()->create(['email_verified_at' => null]);
+    $product = Product::factory()->create(['quantity' => 10, 'min_stock' => 5]);
+
+    app(StockOutProduct::class)->execute(product: $product, quantity: 6);
+
+    expect($unverified->notifications()->count())->toBe(0);
 });

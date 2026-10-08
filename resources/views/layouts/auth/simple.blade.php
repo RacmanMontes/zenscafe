@@ -7,8 +7,8 @@
         <div class="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
             <div class="flex w-full max-w-sm flex-col gap-2">
                 <a href="{{ route('home') }}" class="flex flex-col items-center gap-2 font-medium" wire:navigate>
-                    <span class="flex h-9 w-9 mb-1 items-center justify-center rounded-md">
-                        <x-app-logo-icon class="size-[41px] fill-current text-black dark:text-white" />
+                    <span class="flex h-18 w-18 mb-1 items-center justify-center rounded-md">
+                        <x-app-logo-icon class="size-18 fill-current text-black dark:text-white" />
                     </span>
                     <span class="sr-only">{{ config('app.name', 'Laravel') }}</span>
                 </a>
@@ -23,6 +23,16 @@
                 <flux:toast />
             </flux:toast.group>
         @endpersist
+
+        <div
+            wire:ignore
+            x-cloak
+            x-data="toastNotifications(
+                { success: @js(session('success')), error: @js(session('error')) },
+                { success: @js(__('Success')), error: @js(__('Error')) }
+            )"
+            x-on:zenscafe-toast.window="showToast($event.detail.variant, $event.detail.title, $event.detail.text)"
+        ></div>
 
         @fluxScripts
     </body>

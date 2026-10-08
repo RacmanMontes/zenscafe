@@ -51,7 +51,7 @@ test('cannot archive category with products', function () {
         ->call('confirmArchive', $category->id)
         ->call('archive');
 
-    $this->assertDatabaseHas('categories', ['id' => $category->id, 'deleted_at' => null]);
+    $this->assertDatabaseHas('categories', ['id' => $category->id, 'status' => 'active']);
 });
 
 test('can archive empty category via livewire', function () {
@@ -62,7 +62,7 @@ test('can archive empty category via livewire', function () {
         ->call('confirmArchive', $category->id)
         ->call('archive');
 
-    $this->assertSoftDeleted('categories', ['id' => $category->id]);
+    $this->assertDatabaseHas('categories', ['id' => $category->id, 'status' => 'archived']);
 });
 
 test('archive category action creates audit log', function () {
@@ -71,10 +71,18 @@ test('archive category action creates audit log', function () {
 
     $action->execute($category);
 
-    $this->assertSoftDeleted('categories', ['id' => $category->id]);
+    $this->assertDatabaseHas('categories', ['id' => $category->id, 'status' => 'archived']);
     $this->assertDatabaseHas('audit_logs', [
         'event' => 'archived',
         'auditable_type' => Category::class,
         'auditable_id' => $category->id,
     ]);
+});
+
+test('archived categories are hidden from the active list', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $category = Category::factory()->archived()->create();
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->assertDontSee($category->name);
 });

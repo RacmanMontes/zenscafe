@@ -29,8 +29,8 @@ class CurrentInventory extends Component
 
         return view('livewire.reports.current-inventory', [
             'products' => $products,
-            'categories' => Category::orderBy('name')->get(),
-            'suppliers' => Supplier::orderBy('name')->get(),
+            'categories' => Category::active()->orderBy('name')->get(),
+            'suppliers' => Supplier::active()->orderBy('name')->get(),
             'totalItems' => $products->count(),
             'totalQuantity' => $products->sum('quantity'),
             'totalValue' => $products->filter(fn ($p) => $p->cost_per_unit !== null)

@@ -28,6 +28,16 @@
             </flux:toast.group>
         @endpersist
 
+        <div
+            wire:ignore
+            x-cloak
+            x-data="toastNotifications(
+                { success: @js(session('success')), error: @js(session('error')) },
+                { success: @js(__('Success')), error: @js(__('Error')) }
+            )"
+            x-on:zenscafe-toast.window="showToast($event.detail.variant, $event.detail.title, $event.detail.text)"
+        ></div>
+
         @fluxScripts
     </body>
 </html>

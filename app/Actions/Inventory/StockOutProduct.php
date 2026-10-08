@@ -6,13 +6,16 @@ use App\Enums\TransactionType;
 use App\Models\InventoryTransaction;
 use App\Models\Product;
 use App\Services\AuditService;
+use App\Services\LowStockAlertService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class StockOutProduct
 {
     public function __construct(
         protected AuditService $auditService,
+        protected LowStockAlertService $lowStockAlertService,
     ) {}
 
     /**
@@ -24,28 +27,38 @@ class StockOutProduct
         ?string $reason = null,
         ?string $referenceNumber = null,
         ?string $notes = null,
+        ?Carbon $transactedAt = null,
         ?Request $request = null,
     ): InventoryTransaction {
         if ($quantity <= 0) {
             throw new \InvalidArgumentException('Quantity must be greater than zero.');
         }
 
-        if ($quantity > $product->quantity) {
-            throw new \DomainException('Insufficient stock. Available: '.$product->quantity.', Requested: '.$quantity);
-        }
+        return DB::transaction(function () use ($product, $quantity, $reason, $referenceNumber, $notes, $transactedAt, $request) {
+            $lockedProduct = Product::whereKey($product->id)->lockForUpdate()->first();
 
-        return DB::transaction(function () use ($product, $quantity, $reason, $referenceNumber, $notes, $request) {
-            $previousQuantity = $product->quantity;
+            if ($lockedProduct === null) {
+                throw new \DomainException('Product no longer exists.');
+            }
+
+            if ($quantity > $lockedProduct->quantity) {
+                throw new \DomainException('Insufficient stock. Available: '.$lockedProduct->quantity.', Requested: '.$quantity);
+            }
+
+            $previousQuantity = $lockedProduct->quantity;
             $newQuantity = $previousQuantity - $quantity;
 
-            $product->update(['quantity' => $newQuantity]);
+            $lockedProduct->update(['quantity' => $newQuantity]);
+
+            $this->lowStockAlertService->dispatchFor($lockedProduct);
 
             $transaction = InventoryTransaction::create([
-                'product_id' => $product->id,
+                'product_id' => $lockedProduct->id,
                 'type' => TransactionType::StockOut,
                 'quantity' => $quantity,
                 'previous_quantity' => $previousQuantity,
                 'new_quantity' => $newQuantity,
+                'transacted_at' => $transactedAt ?? now(),
                 'reason' => $reason,
                 'reference_number' => $referenceNumber,
                 'notes' => $notes,
@@ -54,7 +67,7 @@ class StockOutProduct
 
             $this->auditService->log(
                 event: 'stock_out',
-                auditable: $product,
+                auditable: $lockedProduct,
                 oldValues: ['quantity' => $previousQuantity],
                 newValues: ['quantity' => $newQuantity, 'transaction_id' => $transaction->id],
                 request: $request,

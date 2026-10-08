@@ -68,8 +68,8 @@ class Index extends Component
 
         return view('livewire.products.index', [
             'products' => $query->paginate($this->perPage),
-            'categories' => Category::orderBy('name')->get(),
-            'suppliers' => Supplier::orderBy('name')->get(),
+            'categories' => Category::active()->orderBy('name')->get(),
+            'suppliers' => Supplier::active()->orderBy('name')->get(),
         ]);
     }
 }

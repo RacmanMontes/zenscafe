@@ -97,6 +97,14 @@ class Product extends Model
     }
 
     /**
+     * Get the unit label, using the singular form when the quantity is exactly one.
+     */
+    public function unitLabel(): string
+    {
+        return $this->quantity == 1 && $this->unit === 'pcs' ? 'pc' : $this->unit;
+    }
+
+    /**
      * Scope a query to only include active products.
      *
      * @param  Builder<Product>  $query

@@ -5,6 +5,7 @@ namespace App\Livewire\Stock;
 use App\Actions\Inventory\StockInProduct;
 use App\Models\Product;
 use App\Models\Supplier;
+use Illuminate\Support\Carbon;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -46,7 +47,7 @@ class StockIn extends Component
     {
         $validated = $this->validate();
 
-        $product = Product::findOrFail($validated['product_id']);
+        $product = Product::where('status', 'active')->findOrFail($validated['product_id']);
 
         $action->execute(
             product: $product,
@@ -54,10 +55,11 @@ class StockIn extends Component
             supplierId: $validated['supplier_id'] ?? null,
             referenceNumber: $validated['reference_number'] ?? null,
             notes: $validated['notes'] ?? null,
+            transactedAt: Carbon::parse($validated['date']),
             request: request(),
         );
 
-        session()->flash('success', __('Stock in recorded successfully. New quantity: ').$product->fresh()->quantity);
+        $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Stock in recorded successfully. New quantity: ').$product->fresh()->quantity);
         $this->reset(['product_id', 'quantity', 'supplier_id', 'reference_number', 'notes']);
         $this->date = now()->format('Y-m-d');
     }
@@ -74,7 +76,7 @@ class StockIn extends Component
     {
         return view('livewire.stock.stock-in', [
             'products' => $this->products,
-            'suppliers' => Supplier::orderBy('name')->get(),
+            'suppliers' => Supplier::active()->orderBy('name')->get(),
         ]);
     }
 }

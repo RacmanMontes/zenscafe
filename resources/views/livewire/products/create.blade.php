@@ -1,17 +1,25 @@
 <div>
-    <div class="flex flex-col gap-6 max-w-3xl">
-        <div>
-            <div class="flex items-center gap-2 text-sm text-zinc-500">
-                <flux:button variant="subtle" size="sm" :href="route('products.index')" wire:navigate>
-                    {{ __('Products') }}
-                </flux:button>
-                <span>/</span>
-                <span>{{ __('Add New') }}</span>
+    <div class="flex w-full flex-col gap-6">
+        <div class="cafe-page-header">
+            <div>
+                <div class="flex items-center gap-2 text-sm text-stone-500 dark:text-emerald-300/60">
+                    <flux:button variant="subtle" size="sm" :href="route('products.index')" wire:navigate class="rounded-lg">
+                        {{ __('Products') }}
+                    </flux:button>
+                    <span>/</span>
+                    <span class="font-medium text-stone-700 dark:text-emerald-200">{{ __('Add New') }}</span>
+                </div>
+                <h1 class="cafe-page-title mt-2">{{ __('Add New Product') }}</h1>
+                <p class="cafe-page-subtitle">{{ __('Add a new item to your café inventory') }}</p>
             </div>
-            <flux:heading size="xl" class="mt-2">{{ __('Add New Product') }}</flux:heading>
         </div>
 
-        <flux:card>
+        <div class="cafe-card p-6">
+            <div class="mb-6 flex items-start gap-3 rounded-xl border border-emerald-200/70 bg-emerald-50/70 p-4 text-sm text-emerald-900 dark:border-emerald-800/40 dark:bg-emerald-950/40 dark:text-emerald-200">
+                <flux:icon name="information-circle" class="mt-0.5 size-4.5 shrink-0 text-emerald-700 dark:text-emerald-300" />
+                <p>{{ __('Fill in the product details below. Fields marked with validation rules will be checked before saving.') }}</p>
+            </div>
+
             <form wire:submit="save" class="space-y-6">
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <flux:field>
@@ -94,15 +102,15 @@
                     <flux:error name="description" />
                 </flux:field>
 
-                <div class="flex items-center gap-2 pt-2">
-                    <flux:button type="submit" variant="primary" icon="check">
+                <div class="flex items-center gap-2 pt-2 border-t border-[#F1EDE6] dark:border-emerald-950/30">
+                    <flux:button type="submit" variant="primary" icon="check" class="rounded-xl">
                         {{ __('Create Product') }}
                     </flux:button>
-                    <flux:button variant="subtle" :href="route('products.index')" wire:navigate>
+                    <flux:button variant="subtle" :href="route('products.index')" wire:navigate class="rounded-xl">
                         {{ __('Cancel') }}
                     </flux:button>
                 </div>
             </form>
-        </flux:card>
+        </div>
     </div>
 </div>

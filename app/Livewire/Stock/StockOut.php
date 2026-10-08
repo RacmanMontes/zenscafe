@@ -4,6 +4,7 @@ namespace App\Livewire\Stock;
 
 use App\Actions\Inventory\StockOutProduct;
 use App\Models\Product;
+use Illuminate\Support\Carbon;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -43,7 +44,7 @@ class StockOut extends Component
     {
         $validated = $this->validate();
 
-        $product = Product::findOrFail($validated['product_id']);
+        $product = Product::where('status', 'active')->findOrFail($validated['product_id']);
 
         $action->execute(
             product: $product,
@@ -51,10 +52,11 @@ class StockOut extends Component
             reason: $validated['reason'] ?? null,
             referenceNumber: $validated['reference_number'] ?? null,
             notes: $validated['notes'] ?? null,
+            transactedAt: Carbon::parse($validated['date']),
             request: request(),
         );
 
-        session()->flash('success', __('Stock out recorded successfully. New quantity: ').$product->fresh()->quantity);
+        $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Stock out recorded successfully. New quantity: ').$product->fresh()->quantity);
         $this->reset(['product_id', 'quantity', 'reason', 'reference_number', 'notes']);
         $this->date = now()->format('Y-m-d');
     }

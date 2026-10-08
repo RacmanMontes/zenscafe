@@ -79,8 +79,8 @@ class Create extends Component
     public function render()
     {
         return view('livewire.products.create', [
-            'categories' => Category::orderBy('name')->get(),
-            'suppliers' => Supplier::orderBy('name')->get(),
+            'categories' => Category::active()->orderBy('name')->get(),
+            'suppliers' => Supplier::active()->orderBy('name')->get(),
         ]);
     }
 }

@@ -1,52 +1,65 @@
 <div>
     <div class="flex flex-col gap-6">
-        <div>
-            <flux:heading size="xl">{{ __('Reports') }}</flux:heading>
-            <flux:text class="mt-1">{{ __('Generate and view inventory reports') }}</flux:text>
+        <div class="cafe-page-header">
+            <div>
+                <div class="flex items-center gap-2.5">
+                    <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-xs">
+                        <flux:icon name="chart-bar" class="size-5" />
+                    </span>
+                    <h1 class="cafe-page-title">{{ __('Reports') }}</h1>
+                </div>
+                <p class="cafe-page-subtitle">{{ __('Generate and view inventory reports') }}</p>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <flux:card class="hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors">
-                <a href="{{ route('reports.current-inventory') }}" wire:navigate class="block">
-                    <div class="flex items-center gap-4">
-                        <div class="flex size-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                            <flux:icon name="cube" class="size-6 text-blue-600 dark:text-blue-400" />
-                        </div>
-                        <div>
-                            <flux:heading size="sm">{{ __('Current Inventory') }}</flux:heading>
-                            <flux:text class="text-sm">{{ __('View all current stock levels') }}</flux:text>
-                        </div>
+            <a href="{{ route('reports.current-inventory') }}" wire:navigate class="group cafe-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                <div class="flex items-center gap-4">
+                    <div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-xs transition-transform group-hover:scale-105">
+                        <flux:icon name="cube" class="size-6" />
                     </div>
-                </a>
-            </flux:card>
+                    <div>
+                        <h2 class="text-base font-bold text-[#0D3326] dark:text-emerald-100">{{ __('Current Inventory') }}</h2>
+                        <p class="mt-0.5 text-sm text-stone-500 dark:text-emerald-300/60">{{ __('View all current stock levels') }}</p>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                    {{ __('Open report') }}
+                    <flux:icon name="arrow-right" class="size-3 transition-transform group-hover:translate-x-0.5" />
+                </div>
+            </a>
 
-            <flux:card class="hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors">
-                <a href="{{ route('reports.low-stock') }}" wire:navigate class="block">
-                    <div class="flex items-center gap-4">
-                        <div class="flex size-12 items-center justify-center rounded-lg bg-yellow-100 dark:bg-yellow-900/30">
-                            <flux:icon name="exclamation-triangle" class="size-6 text-yellow-600 dark:text-yellow-400" />
-                        </div>
-                        <div>
-                            <flux:heading size="sm">{{ __('Low Stock Report') }}</flux:heading>
-                            <flux:text class="text-sm">{{ __('Items that need restocking') }}</flux:text>
-                        </div>
+            <a href="{{ route('reports.low-stock') }}" wire:navigate class="group cafe-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                <div class="flex items-center gap-4">
+                    <div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-xs transition-transform group-hover:scale-105">
+                        <flux:icon name="exclamation-triangle" class="size-6" />
                     </div>
-                </a>
-            </flux:card>
+                    <div>
+                        <h2 class="text-base font-bold text-[#0D3326] dark:text-emerald-100">{{ __('Low Stock Report') }}</h2>
+                        <p class="mt-0.5 text-sm text-stone-500 dark:text-emerald-300/60">{{ __('Items that need restocking') }}</p>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                    {{ __('Open report' )}}
+                    <flux:icon name="arrow-right" class="size-3 transition-transform group-hover:translate-x-0.5" />
+                </div>
+            </a>
 
-            <flux:card class="hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors">
-                <a href="{{ route('reports.stock-movement') }}" wire:navigate class="block">
-                    <div class="flex items-center gap-4">
-                        <div class="flex size-12 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/30">
-                            <flux:icon name="chart-bar" class="size-6 text-green-600 dark:text-green-400" />
-                        </div>
-                        <div>
-                            <flux:heading size="sm">{{ __('Stock Movement') }}</flux:heading>
-                            <flux:text class="text-sm">{{ __('Stock in/out and adjustments') }}</flux:text>
-                        </div>
+            <a href="{{ route('reports.stock-movement') }}" wire:navigate class="group cafe-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+                <div class="flex items-center gap-4">
+                    <div class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-xs transition-transform group-hover:scale-105">
+                        <flux:icon name="chart-bar" class="size-6" />
                     </div>
-                </a>
-            </flux:card>
+                    <div>
+                        <h2 class="text-base font-bold text-[#0D3326] dark:text-emerald-100">{{ __('Stock Movement') }}</h2>
+                        <p class="mt-0.5 text-sm text-stone-500 dark:text-emerald-300/60">{{ __('Stock in/out and adjustments') }}</p>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                    {{ __('Open report') }}
+                    <flux:icon name="arrow-right" class="size-3 transition-transform group-hover:translate-x-0.5" />
+                </div>
+            </a>
         </div>
     </div>
 </div>

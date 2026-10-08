@@ -8,6 +8,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+[x-cloak] {
+    display: none !important;
+}
+
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
@@ -23,16 +27,24 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
+    --color-accent: #154734;
+    --color-accent-content: #154734;
     --color-accent-foreground: var(--color-white);
+
+    --color-cafe-dark: #0d281e;
+    --color-cafe-teal: #0f3d32;
+    --color-cafe-primary: #1b4d3e;
+    --color-cafe-active: #205c48;
+    --color-cafe-mint: #d1fae5;
+    --color-cafe-cream: #fbf9f5;
+    --color-cafe-warm: #f5efe6;
 }
 
 @layer theme {
     .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+        --color-accent: #34d399;
+        --color-accent-content: #34d399;
+        --color-accent-foreground: #0d281e;
     }
 }
 
@@ -64,3 +76,179 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+/* ==========================================================================
+   Zen's Café - Shared UI Utility Classes
+   ========================================================================== */
+
+@layer components {
+    /* Standard café card container */
+    .cafe-card {
+        @apply rounded-2xl border border-[#E8E4DC] bg-white shadow-sm transition-shadow hover:shadow-md dark:border-emerald-950/40 dark:bg-[#12221B];
+    }
+
+    /* Page header block */
+    .cafe-page-header {
+        @apply flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .cafe-page-title {
+        @apply text-2xl font-extrabold tracking-tight text-[#0D3326] dark:text-emerald-100;
+    }
+
+    .cafe-page-subtitle {
+        @apply mt-1 text-sm font-medium text-[#5C7569] dark:text-emerald-300/70;
+    }
+
+    /* Card section header (icon + title + subtitle) */
+    .cafe-section-header {
+        @apply mb-5 flex items-center justify-between;
+    }
+
+    /* Table header row */
+    .cafe-thead-row {
+        @apply border-b border-[#EFEAE3] bg-[#FAF8F5] text-[11px] font-bold uppercase tracking-wider text-stone-600 dark:border-emerald-900/30 dark:bg-[#0E1A15] dark:text-emerald-400;
+    }
+
+    .cafe-th {
+        @apply whitespace-nowrap py-3 px-4 text-left;
+    }
+
+    .cafe-th-right {
+        @apply whitespace-nowrap py-3 px-4 text-right;
+    }
+
+    /* Table body rows */
+    .cafe-tbody {
+        @apply divide-y divide-[#F1EDE6] dark:divide-emerald-950/30;
+    }
+
+    .cafe-tr {
+        @apply transition-colors hover:bg-[#FAF9F6] dark:hover:bg-emerald-950/30;
+    }
+
+    .cafe-td {
+        @apply px-4 py-3.5 text-left;
+    }
+
+    .cafe-td-right {
+        @apply px-4 py-3.5 text-right;
+    }
+
+    /* Empty state block */
+    .cafe-empty-state {
+        @apply rounded-xl border border-dashed border-stone-200 py-10 text-center dark:border-emerald-900/30;
+    }
+
+    /* Soft status pills */
+    .cafe-status-pill {
+        @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold;
+    }
+
+    .cafe-status-pill-dot {
+        @apply size-1.5 rounded-full;
+    }
+}
+
+/* ==========================================================================
+   Zen's Café - Custom Theme & Sidebar
+   ========================================================================== */
+
+.cafe-sidebar {
+    background: #0d281e !important;
+    border-color: #173f30 !important;
+    position: relative;
+}
+
+/* Subtle botanical ambient glow watermark at the bottom of the sidebar */
+.cafe-sidebar::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 160px;
+    height: 160px;
+    background: radial-gradient(circle at 100% 100%, rgba(52, 211, 153, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.cafe-sidebar [data-flux-sidebar-brand] {
+    color: #ffffff !important;
+}
+
+.cafe-sidebar [data-flux-sidebar-brand] > div:last-child {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em;
+}
+
+.cafe-sidebar [data-flux-sidebar-item] {
+    color: rgba(220, 238, 229, 0.78) !important;
+    border-radius: 0.75rem !important;
+    transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative;
+    border: 1px solid transparent !important;
+}
+
+.cafe-sidebar [data-flux-sidebar-item]:hover {
+    background-color: rgba(26, 77, 60, 0.55) !important;
+    color: #ffffff !important;
+}
+
+.cafe-sidebar [data-flux-sidebar-item] svg {
+    color: rgba(167, 216, 194, 0.85) !important;
+    transition: all 0.18s ease !important;
+}
+
+.cafe-sidebar [data-flux-sidebar-item]:hover svg {
+    color: #ffffff !important;
+    transform: scale(1.06);
+}
+
+.cafe-sidebar [data-flux-sidebar-item][data-current] {
+    background: linear-gradient(135deg, #184c3b 0%, #205c48 100%) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border-color: rgba(52, 211, 153, 0.3) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+.cafe-sidebar [data-flux-sidebar-item][data-current]::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 24%;
+    bottom: 24%;
+    width: 3.5px;
+    border-radius: 9999px;
+    background: #34d399;
+    box-shadow: 0 0 8px rgba(52, 211, 153, 0.8);
+}
+
+.cafe-sidebar [data-flux-sidebar-item][data-current] svg {
+    color: #34d399 !important;
+}
+
+.cafe-sidebar [data-flux-sidebar-profile] {
+    color: #e2ede7 !important;
+    border-radius: 0.75rem !important;
+    transition: background-color 0.15s ease !important;
+}
+
+.cafe-sidebar [data-flux-sidebar-profile]:hover {
+    background-color: rgba(26, 77, 60, 0.55) !important;
+}
+
+.cafe-sidebar [data-flux-sidebar-profile] svg {
+    color: rgba(167, 216, 194, 0.85) !important;
+}
+
+.cafe-sidebar button[data-flux-sidebar-collapse] {
+    color: #a7d8c2 !important;
+}
+
+.cafe-sidebar button[data-flux-sidebar-collapse]:hover {
+    background-color: rgba(26, 77, 60, 0.55) !important;
+    color: #ffffff !important;
+}

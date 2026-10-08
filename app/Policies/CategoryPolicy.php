@@ -12,7 +12,7 @@ class CategoryPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $this->isAuthorized($user);
     }
 
     /**
@@ -20,7 +20,7 @@ class CategoryPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $this->isAuthorized($user);
     }
 
     /**
@@ -28,14 +28,22 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category): bool
     {
-        return true;
+        return $this->isAuthorized($user);
     }
 
     /**
-     * Determine whether the user can archive (soft-delete) the category.
+     * Determine whether the user can archive the category.
      */
     public function delete(User $user, Category $category): bool
     {
-        return true;
+        return $this->isAuthorized($user);
+    }
+
+    /**
+     * Any user with an assigned role may manage categories.
+     */
+    private function isAuthorized(User $user): bool
+    {
+        return $user->role !== null;
     }
 }

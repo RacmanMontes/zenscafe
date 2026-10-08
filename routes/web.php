@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\InventoryReportExportController;
+use App\Livewire\Audit\Index as AuditIndex;
 use App\Livewire\Categories\Create as CategoryCreate;
 use App\Livewire\Categories\Edit as CategoryEdit;
 use App\Livewire\Categories\Index as CategoryIndex;
@@ -19,6 +21,7 @@ use App\Livewire\Stock\StockOut;
 use App\Livewire\Suppliers\Create as SupplierCreate;
 use App\Livewire\Suppliers\Edit as SupplierEdit;
 use App\Livewire\Suppliers\Index as SupplierIndex;
+use App\Livewire\Suppliers\Show as SupplierShow;
 use App\Livewire\Users\Create as UserCreate;
 use App\Livewire\Users\Edit as UserEdit;
 use App\Livewire\Users\Index as UserIndex;
@@ -43,6 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Suppliers
     Route::get('suppliers', SupplierIndex::class)->name('suppliers.index');
     Route::get('suppliers/create', SupplierCreate::class)->name('suppliers.create');
+    Route::get('suppliers/{supplier}', SupplierShow::class)->name('suppliers.show');
     Route::get('suppliers/{supplier}/edit', SupplierEdit::class)->name('suppliers.edit');
 
     // Stock
@@ -55,6 +59,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Reports
     Route::get('reports', ReportIndex::class)->name('reports');
     Route::get('reports/current-inventory', CurrentInventory::class)->name('reports.current-inventory');
+    Route::get('reports/current-inventory/export/pdf', [InventoryReportExportController::class, 'pdf'])->name('reports.current-inventory.export-pdf');
+    Route::get('reports/current-inventory/export/excel', [InventoryReportExportController::class, 'excel'])->name('reports.current-inventory.export-excel');
+    Route::get('reports/current-inventory/export/word', [InventoryReportExportController::class, 'word'])->name('reports.current-inventory.export-word');
     Route::get('reports/low-stock', LowStock::class)->name('reports.low-stock');
     Route::get('reports/stock-movement', StockMovement::class)->name('reports.stock-movement');
 
@@ -66,6 +73,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('users', UserIndex::class)->name('users.index');
         Route::get('users/create', UserCreate::class)->name('users.create');
         Route::get('users/{user}/edit', UserEdit::class)->name('users.edit');
+
+        // Audit Logs
+        Route::get('audit-logs', AuditIndex::class)->name('audit-logs');
     });
 });
 

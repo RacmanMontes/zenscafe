@@ -3,6 +3,7 @@
 use App\Actions\Inventory\StockInProduct;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 
 test('staff can access stock-in page', function () {
     $user = User::factory()->staff()->create(['email_verified_at' => now()]);
@@ -64,4 +65,29 @@ test('stock in creates audit log', function () {
         'auditable_type' => Product::class,
         'auditable_id' => $product->id,
     ]);
+});
+
+test('stock in persists the selected transacted date', function () {
+    $product = Product::factory()->create(['quantity' => 10]);
+    $date = Carbon::parse('2026-09-10 14:30:00');
+
+    app(StockInProduct::class)->execute(
+        product: $product,
+        quantity: 5,
+        transactedAt: $date,
+    );
+
+    $this->assertDatabaseHas('inventory_transactions', [
+        'product_id' => $product->id,
+        'transacted_at' => $date->format('Y-m-d H:i:s'),
+    ]);
+});
+
+test('stock in that restores a product above minimum does not notify users', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $product = Product::factory()->create(['quantity' => 5, 'min_stock' => 5]);
+
+    app(StockInProduct::class)->execute(product: $product, quantity: 10);
+
+    expect($user->notifications()->count())->toBe(0);
 });

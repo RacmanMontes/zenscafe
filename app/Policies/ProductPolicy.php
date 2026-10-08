@@ -12,7 +12,7 @@ class ProductPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $this->isAuthorized($user);
     }
 
     /**
@@ -20,7 +20,7 @@ class ProductPolicy
      */
     public function view(User $user, Product $product): bool
     {
-        return true;
+        return $this->isAuthorized($user);
     }
 
     /**
@@ -28,7 +28,7 @@ class ProductPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $this->isAuthorized($user);
     }
 
     /**
@@ -36,14 +36,22 @@ class ProductPolicy
      */
     public function update(User $user, Product $product): bool
     {
-        return true;
+        return $this->isAuthorized($user);
     }
 
     /**
-     * Determine whether the user can archive (soft-delete) the product.
+     * Determine whether the user can archive the product.
      */
     public function delete(User $user, Product $product): bool
     {
-        return true;
+        return $this->isAuthorized($user);
+    }
+
+    /**
+     * Any user with an assigned role may manage products.
+     */
+    private function isAuthorized(User $user): bool
+    {
+        return $user->role !== null;
     }
 }

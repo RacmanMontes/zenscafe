@@ -1,17 +1,20 @@
 <div>
-    <div class="flex flex-col gap-6 max-w-2xl">
-        <div>
-            <div class="flex items-center gap-2 text-sm text-zinc-500">
-                <flux:button variant="subtle" size="sm" :href="route('users.index')" wire:navigate>
-                    {{ __('Users') }}
-                </flux:button>
-                <span>/</span>
-                <span>{{ __('Edit') }}</span>
+    <div class="flex w-full flex-col gap-6">
+        <div class="cafe-page-header">
+            <div>
+                <div class="flex items-center gap-2 text-sm text-stone-500 dark:text-emerald-300/60">
+                    <flux:button variant="subtle" size="sm" :href="route('users.index')" wire:navigate class="rounded-lg">
+                        {{ __('Users') }}
+                    </flux:button>
+                    <span>/</span>
+                    <span class="font-medium text-stone-700 dark:text-emerald-200">{{ __('Edit') }}</span>
+                </div>
+                <h1 class="cafe-page-title mt-2">{{ __('Edit User') }}</h1>
+                <p class="cafe-page-subtitle">{{ __('Update account details for :name', ['name' => $user->name]) }}</p>
             </div>
-            <flux:heading size="xl" class="mt-2">{{ __('Edit User') }}</flux:heading>
         </div>
 
-        <flux:card>
+        <div class="cafe-card p-6">
             <form wire:submit="save" class="space-y-6">
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <flux:field>
@@ -47,15 +50,15 @@
                     </flux:field>
                 </div>
 
-                <div class="flex items-center gap-2 pt-2">
-                    <flux:button type="submit" variant="primary" icon="check">
+                <div class="flex items-center gap-2 pt-2 border-t border-[#F1EDE6] dark:border-emerald-950/30">
+                    <flux:button type="submit" variant="primary" icon="check" class="rounded-xl">
                         {{ __('Update User') }}
                     </flux:button>
-                    <flux:button variant="subtle" :href="route('users.index')" wire:navigate>
+                    <flux:button variant="subtle" :href="route('users.index')" wire:navigate class="rounded-xl">
                         {{ __('Cancel') }}
                     </flux:button>
                 </div>
             </form>
-        </flux:card>
+        </div>
     </div>
 </div>

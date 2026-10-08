@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property int $quantity
  * @property int $previous_quantity
  * @property int $new_quantity
+ * @property Carbon|null $transacted_at
  * @property int|null $supplier_id
  * @property string|null $reference_number
  * @property string|null $reason
@@ -25,7 +26,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['product_id', 'type', 'quantity', 'previous_quantity', 'new_quantity', 'supplier_id', 'reference_number', 'reason', 'notes', 'user_id'])]
+#[Fillable(['product_id', 'type', 'quantity', 'previous_quantity', 'new_quantity', 'transacted_at', 'supplier_id', 'reference_number', 'reason', 'notes', 'user_id'])]
 class InventoryTransaction extends Model
 {
     /** @use HasFactory<InventoryTransactionFactory> */
@@ -40,6 +41,7 @@ class InventoryTransaction extends Model
     {
         return [
             'type' => TransactionType::class,
+            'transacted_at' => 'datetime',
         ];
     }
 

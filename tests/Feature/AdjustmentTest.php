@@ -3,6 +3,7 @@
 use App\Actions\Inventory\AdjustInventory;
 use App\Models\Product;
 use App\Models\User;
+use App\Notifications\LowStockNotification;
 
 test('admin can access adjustment page', function () {
     $user = User::factory()->admin()->create(['email_verified_at' => now()]);
@@ -77,5 +78,22 @@ test('adjustment creates audit log', function () {
         'event' => 'adjustment',
         'auditable_type' => Product::class,
         'auditable_id' => $product->id,
+    ]);
+});
+
+test('adjustment that drops a product below minimum stock notifies verified users', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $product = Product::factory()->create(['quantity' => 10, 'min_stock' => 5]);
+
+    app(AdjustInventory::class)->execute(
+        product: $product,
+        adjustment: -6,
+        reason: 'Damaged item',
+    );
+
+    $this->assertDatabaseHas('notifications', [
+        'type' => LowStockNotification::class,
+        'notifiable_id' => $user->id,
+        'notifiable_type' => User::class,
     ]);
 });

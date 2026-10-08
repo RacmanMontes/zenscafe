@@ -25,7 +25,16 @@ class CategoryFactory extends Factory
         return [
             'name' => Str::title($name),
             'slug' => Str::slug($name),
+            'status' => Category::STATUS_ACTIVE,
             'description' => fake()->optional(0.5)->sentence(),
         ];
+    }
+
+    /**
+     * Indicate that the category is archived.
+     */
+    public function archived(): static
+    {
+        return $this->state(fn (): array => ['status' => Category::STATUS_ARCHIVED]);
     }
 }

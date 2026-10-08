@@ -12,7 +12,7 @@ class SupplierPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $this->isAuthorized($user);
     }
 
     /**
@@ -20,7 +20,7 @@ class SupplierPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $this->isAuthorized($user);
     }
 
     /**
@@ -28,14 +28,22 @@ class SupplierPolicy
      */
     public function update(User $user, Supplier $supplier): bool
     {
-        return true;
+        return $this->isAuthorized($user);
     }
 
     /**
-     * Determine whether the user can archive (soft-delete) the supplier.
+     * Determine whether the user can archive the supplier.
      */
     public function delete(User $user, Supplier $supplier): bool
     {
-        return true;
+        return $this->isAuthorized($user);
+    }
+
+    /**
+     * Any user with an assigned role may manage suppliers.
+     */
+    private function isAuthorized(User $user): bool
+    {
+        return $user->role !== null;
     }
 }

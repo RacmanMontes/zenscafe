@@ -21,11 +21,15 @@ class ArchiveCategory
             throw new \DomainException('Cannot archive category that has products. Remove or reassign products first.');
         }
 
-        $category->delete();
+        $oldValues = ['status' => $category->status];
+
+        $category->update(['status' => Category::STATUS_ARCHIVED]);
 
         $this->auditService->log(
             event: 'archived',
             auditable: $category,
+            oldValues: $oldValues,
+            newValues: ['status' => Category::STATUS_ARCHIVED],
             request: $request,
         );
 

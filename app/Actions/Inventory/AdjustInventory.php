@@ -6,6 +6,7 @@ use App\Enums\TransactionType;
 use App\Models\InventoryTransaction;
 use App\Models\Product;
 use App\Services\AuditService;
+use App\Services\LowStockAlertService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,6 +14,7 @@ class AdjustInventory
 {
     public function __construct(
         protected AuditService $auditService,
+        protected LowStockAlertService $lowStockAlertService,
     ) {}
 
     /**
@@ -25,18 +27,26 @@ class AdjustInventory
         ?string $notes = null,
         ?Request $request = null,
     ): InventoryTransaction {
-        $previousQuantity = $product->quantity;
-        $newQuantity = $previousQuantity + $adjustment;
+        return DB::transaction(function () use ($product, $adjustment, $reason, $notes, $request) {
+            $lockedProduct = Product::whereKey($product->id)->lockForUpdate()->first();
 
-        if ($newQuantity < 0) {
-            throw new \DomainException('Adjustment would result in negative stock. Current: '.$previousQuantity.', Adjustment: '.$adjustment);
-        }
+            if ($lockedProduct === null) {
+                throw new \DomainException('Product no longer exists.');
+            }
 
-        return DB::transaction(function () use ($product, $adjustment, $reason, $notes, $previousQuantity, $newQuantity, $request) {
-            $product->update(['quantity' => $newQuantity]);
+            $previousQuantity = $lockedProduct->quantity;
+            $newQuantity = $previousQuantity + $adjustment;
+
+            if ($newQuantity < 0) {
+                throw new \DomainException('Adjustment would result in negative stock. Current: '.$previousQuantity.', Adjustment: '.$adjustment);
+            }
+
+            $lockedProduct->update(['quantity' => $newQuantity]);
+
+            $this->lowStockAlertService->dispatchFor($lockedProduct);
 
             $transaction = InventoryTransaction::create([
-                'product_id' => $product->id,
+                'product_id' => $lockedProduct->id,
                 'type' => TransactionType::Adjustment,
                 'quantity' => abs($adjustment),
                 'previous_quantity' => $previousQuantity,
@@ -48,7 +58,7 @@ class AdjustInventory
 
             $this->auditService->log(
                 event: 'adjustment',
-                auditable: $product,
+                auditable: $lockedProduct,
                 oldValues: ['quantity' => $previousQuantity],
                 newValues: ['quantity' => $newQuantity, 'adjustment' => $adjustment, 'reason' => $reason, 'transaction_id' => $transaction->id],
                 request: $request,

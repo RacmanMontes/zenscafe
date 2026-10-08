@@ -44,7 +44,7 @@ test('cannot archive supplier with products', function () {
         ->call('confirmArchive', $supplier->id)
         ->call('archive');
 
-    $this->assertDatabaseHas('suppliers', ['id' => $supplier->id, 'deleted_at' => null]);
+    $this->assertDatabaseHas('suppliers', ['id' => $supplier->id, 'status' => 'active']);
 });
 
 test('can archive empty supplier via livewire', function () {
@@ -55,7 +55,7 @@ test('can archive empty supplier via livewire', function () {
         ->call('confirmArchive', $supplier->id)
         ->call('archive');
 
-    $this->assertSoftDeleted('suppliers', ['id' => $supplier->id]);
+    $this->assertDatabaseHas('suppliers', ['id' => $supplier->id, 'status' => 'archived']);
 });
 
 test('archive supplier action creates audit log', function () {
@@ -64,10 +64,18 @@ test('archive supplier action creates audit log', function () {
 
     $action->execute($supplier);
 
-    $this->assertSoftDeleted('suppliers', ['id' => $supplier->id]);
+    $this->assertDatabaseHas('suppliers', ['id' => $supplier->id, 'status' => 'archived']);
     $this->assertDatabaseHas('audit_logs', [
         'event' => 'archived',
         'auditable_type' => Supplier::class,
         'auditable_id' => $supplier->id,
     ]);
+});
+
+test('archived suppliers are hidden from the active list', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $supplier = Supplier::factory()->archived()->create();
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->assertDontSee($supplier->name);
 });

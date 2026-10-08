@@ -42,7 +42,7 @@ class Adjustment extends Component
             request: request(),
         );
 
-        session()->flash('success', __('Inventory adjusted successfully. New quantity: ').$product->fresh()->quantity);
+        $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Inventory adjusted successfully. New quantity: ').$product->fresh()->quantity);
         $this->reset(['product_id', 'adjustment', 'reason', 'notes']);
     }
 

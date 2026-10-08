@@ -43,7 +43,7 @@ class Index extends Component
         try {
             $action->execute($category, request());
         } catch (\DomainException $e) {
-            session()->flash('error', __($e->getMessage()));
+            $this->dispatch('zenscafe-toast', variant: 'danger', title: __('Error'), text: __($e->getMessage()));
             $this->showArchiveModal = false;
 
             return;
@@ -52,12 +52,12 @@ class Index extends Component
         $this->showArchiveModal = false;
         $this->categoryToArchive = null;
 
-        session()->flash('success', __('Category archived successfully.'));
+        $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Category archived successfully.'));
     }
 
     public function render()
     {
-        $query = Category::withCount('products')
+        $query = Category::active()->withCount('products')
             ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
             ->latest();
 

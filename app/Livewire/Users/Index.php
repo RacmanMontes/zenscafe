@@ -26,7 +26,7 @@ class Index extends Component
     public function toggleStatus(User $user, ToggleUserStatus $action): void
     {
         if ($user->id === auth()->id()) {
-            session()->flash('error', __('You cannot deactivate your own account.'));
+            $this->dispatch('zenscafe-toast', variant: 'danger', title: __('Error'), text: __('You cannot deactivate your own account.'));
 
             return;
         }
@@ -34,7 +34,7 @@ class Index extends Component
         $action->execute($user, request());
 
         $status = $user->fresh()->email_verified_at ? 'activated' : 'deactivated';
-        session()->flash('success', __("User {$status} successfully."));
+        $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __("User {$status} successfully."));
     }
 
     public function render()
