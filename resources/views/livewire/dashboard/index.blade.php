@@ -1,57 +1,7 @@
 <div wire:poll.30s>
     <div class="flex h-full w-full flex-1 flex-col gap-6">
 
-        <!-- Café Hero Welcome Banner -->
-        <div class="relative overflow-hidden rounded-2xl border border-[#EBDDCB] bg-gradient-to-r from-[#FAF6F0] via-[#FCF9F5] to-[#F5EFEB] p-6 shadow-[0_2px_12px_rgba(180,140,100,0.06)] dark:border-emerald-900/30 dark:from-[#152920] dark:via-[#11231b] dark:to-[#0d1c16] sm:p-7">
-            <!-- Subtle botanical leaf background decorations -->
-            <div class="pointer-events-none absolute -right-6 -top-8 size-48 select-none opacity-[0.12] dark:opacity-[0.06]">
-                <svg viewBox="0 0 200 200" fill="none" class="size-full text-emerald-800 dark:text-emerald-400" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M100 20C100 20 125 65 170 80C125 95 100 140 100 140C100 140 75 95 30 80C75 65 100 20 100 20Z" fill="currentColor"/>
-                    <path d="M140 70C140 70 155 100 185 110C155 120 140 150 140 150C140 150 125 120 95 110C125 100 140 70 140 70Z" fill="currentColor"/>
-                </svg>
-            </div>
-
-            <div class="pointer-events-none absolute -bottom-10 right-40 size-40 select-none opacity-[0.09] dark:opacity-[0.05]">
-                <svg viewBox="0 0 100 100" fill="none" class="size-full text-amber-900 dark:text-amber-400" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Coffee bean graphic -->
-                    <path d="M50 10C27.9 10 10 27.9 10 50C10 72.1 27.9 90 50 90C72.1 90 90 72.1 90 50C90 27.9 72.1 10 50 10ZM50 82C32.3 82 18 67.7 18 50C18 32.3 32.3 18 50 18C67.7 18 82 32.3 82 50C82 67.7 67.7 82 50 82Z" fill="currentColor"/>
-                    <path d="M46 22C46 22 56 36 46 50C36 64 46 78 46 78" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-                </svg>
-            </div>
-
-            <div class="pointer-events-none absolute -left-12 -bottom-12 size-44 rounded-full bg-emerald-400/10 blur-2xl select-none"></div>
-            <div class="pointer-events-none absolute right-10 top-0 size-36 rounded-full bg-amber-300/15 blur-2xl select-none"></div>
-
-            <div class="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <div class="inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-emerald-100/70 px-3 py-1 text-xs font-semibold text-emerald-900 shadow-2xs dark:border-emerald-800/40 dark:bg-emerald-950/70 dark:text-emerald-300 mb-2.5">
-                        <svg class="size-3.5 text-emerald-700 dark:text-emerald-400" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M2,21H20V19H2M20,8H18V5H20M20,3H4V13A4,4 0 0,0 8,17H14A4,4 0 0,0 18,13V10H20A2,2 0 0,0 22,8V5C22,3.89 21.1,3 20,3Z"/>
-                        </svg>
-                        <span>Zen's Café Inventory System</span>
-                    </div>
-                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0D3326] dark:text-emerald-100">
-                        {{ __('Dashboard') }}
-                    </h1>
-                    <p class="mt-1 text-sm sm:text-base font-medium text-[#4A6B5D] dark:text-emerald-300/80">
-                        {{ __('Welcome to Zen\'s Cafe Inventory Management System') }}
-                    </p>
-                </div>
-
-                <div x-data="{ now: new Date() }" x-init="setInterval(() => now = new Date(), 1000)" class="relative z-10 flex flex-col sm:items-end justify-center rounded-2xl border border-[#E8DFD5]/90 bg-white/85 px-5 py-3.5 shadow-2xs backdrop-blur-md dark:border-emerald-900/40 dark:bg-[#10241C]/85">
-                    <div class="text-base font-bold text-[#144233] dark:text-emerald-100" x-text="now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })"></div>
-                    <div class="mt-1 flex items-center gap-2 text-xs font-semibold text-[#5C7569] dark:text-emerald-300/70">
-                        <span class="relative flex size-2">
-                            <span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
-                        </span>
-                        <span x-text="now.toLocaleTimeString()"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 6 KPI Summary Cards (Soft pastel backgrounds & colored icon containers) -->
+<!-- 6 KPI Summary Cards (Soft pastel backgrounds & colored icon containers) -->
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
 
             <!-- 1. Total Items (Green / Mint) -->

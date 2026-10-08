@@ -14,3 +14,12 @@ test('authenticated users can visit the dashboard', function () {
     $response = $this->get(route('dashboard'));
     $response->assertOk();
 });
+
+test('dashboard does not render the welcome hero banner', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $response = $this->get(route('dashboard'));
+    $response->assertOk()
+        ->assertDontSee('Welcome to Zen');
+});
