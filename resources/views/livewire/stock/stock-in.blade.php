@@ -1,18 +1,5 @@
 <div>
     <div class="flex w-full flex-col gap-6">
-        <div class="cafe-page-header">
-            <div>
-                <div class="flex items-center gap-2.5">
-                    <span class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs">
-                        <flux:icon name="arrow-down-tray" class="size-5.5" />
-                    </span>
-                    <div>
-                        <h1 class="cafe-page-title">{{ __('Stock In') }}</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="cafe-card p-6">
             <div class="mb-6 flex items-start gap-3 rounded-xl border border-emerald-200/70 bg-emerald-50/70 p-4 text-sm text-emerald-900 dark:border-emerald-800/40 dark:bg-emerald-950/40 dark:text-emerald-200">
                 <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-600/10 text-emerald-700 dark:text-emerald-300">

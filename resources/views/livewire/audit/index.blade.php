@@ -1,16 +1,5 @@
 <div>
     <div class="flex flex-col gap-6">
-        <div class="cafe-page-header">
-            <div>
-                <div class="flex items-center gap-2.5">
-                    <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-600 text-white shadow-xs">
-                        <flux:icon name="shield-check" class="size-5" />
-                    </span>
-                    <h1 class="cafe-page-title">{{ __('Audit Logs') }}</h1>
-                </div>
-            </div>
-        </div>
-
         <div class="cafe-card p-5">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <flux:field class="lg:col-span-1">
