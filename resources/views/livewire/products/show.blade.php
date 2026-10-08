@@ -21,7 +21,7 @@
             </div>
             @if($product->status !== 'archived')
                 <div class="flex items-center gap-2">
-                    <flux:button variant="subtle" icon="pencil" :href="route('products.edit', $product)" wire:navigate class="rounded-xl">
+                    <flux:button variant="subtle" icon="pencil" :href="route('products.index', ['edit' => $product->id])" wire:navigate class="rounded-xl">
                         {{ __('Edit') }}
                     </flux:button>
                     <flux:button variant="danger" icon="archive-box" @click="$wire.set('showArchiveModal', true)" class="rounded-xl">

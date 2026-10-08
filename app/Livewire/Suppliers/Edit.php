@@ -4,10 +4,8 @@ namespace App\Livewire\Suppliers;
 
 use App\Actions\Supplier\UpdateSupplier;
 use App\Models\Supplier;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Edit Supplier')]
 class Edit extends Component
 {
     public Supplier $supplier;
@@ -51,8 +49,13 @@ class Edit extends Component
 
         $action->execute($this->supplier, $validated, request());
 
-        session()->flash('success', __('Supplier updated successfully.'));
-        $this->redirectRoute('suppliers.index');
+        $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Supplier updated successfully.'));
+        $this->dispatch('supplierUpdated')->to(Index::class);
+    }
+
+    public function cancelEdit(): void
+    {
+        $this->dispatch('cancelSupplierEdit')->to(Index::class);
     }
 
     public function render()

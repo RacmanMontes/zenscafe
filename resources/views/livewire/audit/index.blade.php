@@ -8,7 +8,6 @@
                     </span>
                     <h1 class="cafe-page-title">{{ __('Audit Logs') }}</h1>
                 </div>
-                <p class="cafe-page-subtitle">{{ __('A chronological record of changes made across the system') }}</p>
             </div>
         </div>
 

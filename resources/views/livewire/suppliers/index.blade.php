@@ -74,7 +74,7 @@
                                             <flux:button variant="subtle" size="sm" icon="eye" :href="route('suppliers.show', $supplier)" wire:navigate class="rounded-lg" title="{{ __('View') }}" aria-label="{{ __('View') }}">
                                                 {{ __('View') }}
                                             </flux:button>
-                                            <flux:button variant="subtle" size="sm" icon="pencil" :href="route('suppliers.edit', $supplier)" wire:navigate class="rounded-lg" title="{{ __('Edit') }}" aria-label="{{ __('Edit') }}">
+                                            <flux:button variant="subtle" size="sm" icon="pencil" @click="$wire.openEditModal({{ $supplier->id }})" class="rounded-lg" title="{{ __('Edit') }}" aria-label="{{ __('Edit') }}">
                                                 {{ __('Edit') }}
                                             </flux:button>
                                             <flux:button variant="subtle" size="sm" icon="trash" @click="$wire.confirmArchive({{ $supplier->id }})" class="rounded-lg text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:text-rose-400 dark:hover:bg-rose-950/40" title="{{ __('Archive') }}" aria-label="{{ __('Archive') }}">
@@ -121,6 +121,13 @@
     <flux:modal wire:model.self="showCreateModal" class="rounded-2xl p-6 w-full sm:max-w-3xl">
         @if($showCreateModal)
             <livewire:suppliers.create :key="'supplier-create-form'" />
+        @endif
+    </flux:modal>
+
+    <!-- Edit Supplier Modal -->
+    <flux:modal wire:model.self="showEditModal" class="rounded-2xl p-6 w-full sm:max-w-3xl">
+        @if($showEditModal && $editingSupplier)
+            <livewire:suppliers.edit :supplier="$editingSupplier" :key="'supplier-edit-form-'.$editingSupplier->id" />
         @endif
     </flux:modal>
 

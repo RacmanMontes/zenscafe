@@ -24,9 +24,19 @@ class Index extends Component
 
     public bool $showCreateModal = false;
 
+    public bool $showEditModal = false;
+
+    public ?int $editingCategoryId = null;
+
     public function openCreateModal(): void
     {
         $this->showCreateModal = true;
+    }
+
+    public function openEditModal(int $categoryId): void
+    {
+        $this->editingCategoryId = $categoryId;
+        $this->showEditModal = true;
     }
 
     #[On('categoryCreated')]
@@ -39,6 +49,19 @@ class Index extends Component
     public function cancelCategoryCreate(): void
     {
         $this->showCreateModal = false;
+    }
+
+    #[On('categoryUpdated')]
+    public function categoryUpdated(): void
+    {
+        $this->showEditModal = false;
+        $this->editingCategoryId = null;
+    }
+
+    #[On('cancelCategoryEdit')]
+    public function cancelCategoryEdit(): void
+    {
+        $this->showEditModal = false;
     }
 
     public function updatedSearch(): void
@@ -83,6 +106,7 @@ class Index extends Component
 
         return view('livewire.categories.index', [
             'categories' => $query->paginate($this->perPage),
+            'editingCategory' => $this->editingCategoryId ? Category::find($this->editingCategoryId) : null,
         ]);
     }
 }

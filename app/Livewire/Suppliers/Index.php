@@ -24,9 +24,19 @@ class Index extends Component
 
     public bool $showCreateModal = false;
 
+    public bool $showEditModal = false;
+
+    public ?int $editingSupplierId = null;
+
     public function openCreateModal(): void
     {
         $this->showCreateModal = true;
+    }
+
+    public function openEditModal(int $supplierId): void
+    {
+        $this->editingSupplierId = $supplierId;
+        $this->showEditModal = true;
     }
 
     #[On('supplierCreated')]
@@ -39,6 +49,19 @@ class Index extends Component
     public function cancelSupplierCreate(): void
     {
         $this->showCreateModal = false;
+    }
+
+    #[On('supplierUpdated')]
+    public function supplierUpdated(): void
+    {
+        $this->showEditModal = false;
+        $this->editingSupplierId = null;
+    }
+
+    #[On('cancelSupplierEdit')]
+    public function cancelSupplierEdit(): void
+    {
+        $this->showEditModal = false;
     }
 
     public function updatedSearch(): void
@@ -89,6 +112,7 @@ class Index extends Component
 
         return view('livewire.suppliers.index', [
             'suppliers' => $query->paginate($this->perPage),
+            'editingSupplier' => $this->editingSupplierId ? Supplier::find($this->editingSupplierId) : null,
         ]);
     }
 }

@@ -6,10 +6,8 @@ use App\Actions\Product\UpdateProduct;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Supplier;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Edit Product')]
 class Edit extends Component
 {
     public Product $product;
@@ -72,8 +70,13 @@ class Edit extends Component
 
         $action->execute($this->product, $validated, request());
 
-        session()->flash('success', __('Product updated successfully.'));
-        $this->redirectRoute('products.show', $this->product);
+        $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Product updated successfully.'));
+        $this->dispatch('productUpdated')->to(Index::class);
+    }
+
+    public function cancelEdit(): void
+    {
+        $this->dispatch('cancelProductEdit')->to(Index::class);
     }
 
     public function render()

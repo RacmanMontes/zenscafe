@@ -48,12 +48,42 @@ test('creating a category closes the create modal', function () {
         ->assertSet('showCreateModal', false);
 });
 
+test('category edit page was replaced by an inline modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $category = Category::factory()->create();
+
+    $this->actingAs($user)->get("/categories/{$category->id}/edit")->assertNotFound();
+});
+
+test('staff can open the edit category modal from the index', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $category = Category::factory()->create();
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openEditModal', $category->id)
+        ->assertSet('showEditModal', true)
+        ->assertSet('editingCategoryId', $category->id);
+});
+
+test('updating a category closes the edit modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $category = Category::factory()->create();
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openEditModal', $category->id)
+        ->assertSet('showEditModal', true)
+        ->dispatch('categoryUpdated')
+        ->assertSet('showEditModal', false)
+        ->assertSet('editingCategoryId', null);
+});
+
 test('staff can update a category via livewire', function () {
     $category = Category::factory()->create();
 
     Livewire::test(Edit::class, ['category' => $category])
         ->set('name', 'Updated Category')
-        ->call('save');
+        ->call('save')
+        ->assertDispatched('zenscafe-toast', variant: 'success', title: 'Success', text: 'Category updated successfully.');
 
     $this->assertDatabaseHas('categories', ['id' => $category->id, 'name' => 'Updated Category']);
 });

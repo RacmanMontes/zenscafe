@@ -16,7 +16,7 @@
                     <h1 class="cafe-page-title">{{ $supplier->name }}</h1>
                 </div>
             </div>
-            <flux:button variant="subtle" icon="pencil" :href="route('suppliers.edit', $supplier)" wire:navigate class="rounded-xl">
+            <flux:button variant="subtle" icon="pencil" :href="route('suppliers.index', ['edit' => $supplier->id])" wire:navigate class="rounded-xl">
                 {{ __('Edit') }}
             </flux:button>
         </div>

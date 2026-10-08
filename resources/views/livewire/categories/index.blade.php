@@ -70,7 +70,7 @@
                                     </td>
                                     <td class="cafe-td-right">
                                         <div class="flex items-center justify-end gap-1.5">
-                                            <flux:button variant="subtle" size="sm" icon="pencil" :href="route('categories.edit', $category)" wire:navigate class="rounded-lg" title="{{ __('Edit') }}" aria-label="{{ __('Edit') }}">
+                                            <flux:button variant="subtle" size="sm" icon="pencil" @click="$wire.openEditModal({{ $category->id }})" class="rounded-lg" title="{{ __('Edit') }}" aria-label="{{ __('Edit') }}">
                                                 {{ __('Edit') }}
                                             </flux:button>
                                             <flux:button variant="subtle" size="sm" icon="trash" @click="$wire.confirmArchive({{ $category->id }})" class="rounded-lg text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:text-rose-400 dark:hover:bg-rose-950/40" title="{{ __('Archive') }}" aria-label="{{ __('Archive') }}">
@@ -118,6 +118,13 @@
     <flux:modal wire:model.self="showCreateModal" class="rounded-2xl p-6 w-full sm:max-w-lg">
         @if($showCreateModal)
             <livewire:categories.create :key="'category-create-form'" />
+        @endif
+    </flux:modal>
+
+    <!-- Edit Category Modal -->
+    <flux:modal wire:model.self="showEditModal" class="rounded-2xl p-6 w-full sm:max-w-lg">
+        @if($showEditModal && $editingCategory)
+            <livewire:categories.edit :category="$editingCategory" :key="'category-edit-form-'.$editingCategory->id" />
         @endif
     </flux:modal>
 

@@ -128,7 +128,7 @@
                                             <flux:button variant="subtle" size="sm" icon="eye" :href="route('products.show', $product)" wire:navigate class="rounded-lg" title="{{ __('View') }}" aria-label="{{ __('View') }}">
                                                 {{ __('View') }}
                                             </flux:button>
-                                            <flux:button variant="subtle" size="sm" icon="pencil" :href="route('products.edit', $product)" wire:navigate class="rounded-lg" title="{{ __('Edit') }}" aria-label="{{ __('Edit') }}">
+                                            <flux:button variant="subtle" size="sm" icon="pencil" @click="$wire.openEditModal({{ $product->id }})" class="rounded-lg" title="{{ __('Edit') }}" aria-label="{{ __('Edit') }}">
                                                 {{ __('Edit') }}
                                             </flux:button>
                                         </div>
@@ -150,6 +150,13 @@
     <flux:modal wire:model.self="showCreateModal" class="rounded-2xl p-6 w-full sm:max-w-3xl">
         @if($showCreateModal)
             <livewire:products.create :key="'product-create-form'" />
+        @endif
+    </flux:modal>
+
+    <!-- Edit Product Modal -->
+    <flux:modal wire:model.self="showEditModal" class="rounded-2xl p-6 w-full sm:max-w-3xl">
+        @if($showEditModal && $editingProduct)
+            <livewire:products.edit :product="$editingProduct" :key="'product-edit-form-'.$editingProduct->id" />
         @endif
     </flux:modal>
 

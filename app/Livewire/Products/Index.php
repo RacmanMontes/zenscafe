@@ -29,14 +29,29 @@ class Index extends Component
 
     public bool $showCreateModal = false;
 
+    public bool $showEditModal = false;
+
+    public ?int $editingProductId = null;
+
     public function mount(): void
     {
         $this->showCreateModal = request()->boolean('create');
+
+        if (request()->query('edit')) {
+            $this->editingProductId = (int) request()->query('edit');
+            $this->showEditModal = true;
+        }
     }
 
     public function openCreateModal(): void
     {
         $this->showCreateModal = true;
+    }
+
+    public function openEditModal(int $productId): void
+    {
+        $this->editingProductId = $productId;
+        $this->showEditModal = true;
     }
 
     #[On('productCreated')]
@@ -49,6 +64,19 @@ class Index extends Component
     public function cancelProductCreate(): void
     {
         $this->showCreateModal = false;
+    }
+
+    #[On('productUpdated')]
+    public function productUpdated(): void
+    {
+        $this->showEditModal = false;
+        $this->editingProductId = null;
+    }
+
+    #[On('cancelProductEdit')]
+    public function cancelProductEdit(): void
+    {
+        $this->showEditModal = false;
     }
 
     public function updatedSearch(): void
@@ -95,6 +123,7 @@ class Index extends Component
             'products' => $query->paginate($this->perPage),
             'categories' => Category::active()->orderBy('name')->get(),
             'suppliers' => Supplier::active()->orderBy('name')->get(),
+            'editingProduct' => $this->editingProductId ? Product::find($this->editingProductId) : null,
         ]);
     }
 }

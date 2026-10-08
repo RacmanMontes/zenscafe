@@ -4,10 +4,8 @@ namespace App\Livewire\Categories;
 
 use App\Actions\Category\UpdateCategory;
 use App\Models\Category;
-use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Edit Category')]
 class Edit extends Component
 {
     public Category $category;
@@ -40,8 +38,13 @@ class Edit extends Component
 
         $action->execute($this->category, $validated, request());
 
-        session()->flash('success', __('Category updated successfully.'));
-        $this->redirectRoute('categories.index');
+        $this->dispatch('zenscafe-toast', variant: 'success', title: __('Success'), text: __('Category updated successfully.'));
+        $this->dispatch('categoryUpdated')->to(Index::class);
+    }
+
+    public function cancelEdit(): void
+    {
+        $this->dispatch('cancelCategoryEdit')->to(Index::class);
     }
 
     public function render()

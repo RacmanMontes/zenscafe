@@ -8,7 +8,6 @@
                     </span>
                     <div>
                         <h1 class="cafe-page-title">{{ __('Stock Out') }}</h1>
-                        <p class="cafe-page-subtitle">{{ __('Record outgoing inventory') }}</p>
                     </div>
                 </div>
             </div>

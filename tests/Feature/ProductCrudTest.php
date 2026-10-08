@@ -74,6 +74,44 @@ test('creating a product closes the create modal', function () {
         ->assertSet('showCreateModal', false);
 });
 
+test('product edit page was replaced by an inline modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $product = Product::factory()->create();
+
+    $this->actingAs($user)->get("/products/{$product->id}/edit")->assertNotFound();
+});
+
+test('staff can open the edit product modal from the index', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $product = Product::factory()->create();
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openEditModal', $product->id)
+        ->assertSet('showEditModal', true)
+        ->assertSet('editingProductId', $product->id);
+});
+
+test('products index opens the edit modal via the edit query param', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $product = Product::factory()->create();
+
+    Livewire::actingAs($user)->withQueryParams(['edit' => $product->id])->test(Index::class)
+        ->assertSet('showEditModal', true)
+        ->assertSee('Edit Product');
+});
+
+test('updating a product closes the edit modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $product = Product::factory()->create();
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openEditModal', $product->id)
+        ->assertSet('showEditModal', true)
+        ->dispatch('productUpdated')
+        ->assertSet('showEditModal', false)
+        ->assertSet('editingProductId', null);
+});
+
 test('staff can update a product via livewire', function () {
     $product = Product::factory()->create();
 
@@ -85,7 +123,8 @@ test('staff can update a product via livewire', function () {
         ->set('quantity', $product->quantity)
         ->set('min_stock', $product->min_stock)
         ->set('status', 'active')
-        ->call('save');
+        ->call('save')
+        ->assertDispatched('zenscafe-toast', variant: 'success', title: 'Success', text: 'Product updated successfully.');
 
     $this->assertDatabaseHas('products', ['id' => $product->id, 'name' => 'Updated Product']);
 });

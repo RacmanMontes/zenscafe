@@ -50,12 +50,42 @@ test('creating a supplier closes the create modal', function () {
         ->assertSet('showCreateModal', false);
 });
 
+test('supplier edit page was replaced by an inline modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $supplier = Supplier::factory()->create();
+
+    $this->actingAs($user)->get("/suppliers/{$supplier->id}/edit")->assertNotFound();
+});
+
+test('staff can open the edit supplier modal from the index', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $supplier = Supplier::factory()->create();
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openEditModal', $supplier->id)
+        ->assertSet('showEditModal', true)
+        ->assertSet('editingSupplierId', $supplier->id);
+});
+
+test('updating a supplier closes the edit modal', function () {
+    $user = User::factory()->staff()->create(['email_verified_at' => now()]);
+    $supplier = Supplier::factory()->create();
+
+    Livewire::actingAs($user)->test(Index::class)
+        ->call('openEditModal', $supplier->id)
+        ->assertSet('showEditModal', true)
+        ->dispatch('supplierUpdated')
+        ->assertSet('showEditModal', false)
+        ->assertSet('editingSupplierId', null);
+});
+
 test('staff can update a supplier via livewire', function () {
     $supplier = Supplier::factory()->create();
 
     Livewire::test(Edit::class, ['supplier' => $supplier])
         ->set('name', 'Updated Supplier')
-        ->call('save');
+        ->call('save')
+        ->assertDispatched('zenscafe-toast', variant: 'success', title: 'Success', text: 'Supplier updated successfully.');
 
     $this->assertDatabaseHas('suppliers', ['id' => $supplier->id, 'name' => 'Updated Supplier']);
 });
