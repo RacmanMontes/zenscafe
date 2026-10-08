@@ -12,6 +12,65 @@
             </div>
 
             <form wire:submit="submit" class="space-y-6">
+                <div
+                    class="rounded-xl border border-dashed border-rose-300/70 bg-rose-50/40 p-4 dark:border-rose-800/40 dark:bg-rose-950/20"
+                    x-data="{
+                        isScanning: false,
+                        startScanner() {
+                            this.isScanning = true;
+                            $nextTick(() => {
+                                ZenQrScanner.start('zen-qr-viewport', (decoded) => {
+                                    this.isScanning = false;
+                                    $wire.set('scan', decoded);
+                                    $wire.handleScan();
+                                });
+                            });
+                        },
+                        stopScanner() {
+                            this.isScanning = false;
+                            ZenQrScanner.stop();
+                        },
+                    }"
+                >
+                    <div class="flex items-start gap-3">
+                        <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-rose-600 text-white">
+                            <flux:icon name="qr-code" class="size-4.5" />
+                        </span>
+                        <flux:field class="flex-1">
+                            <flux:label>{{ __('Scan Product') }}</flux:label>
+                            <div class="flex gap-2">
+                                <flux:input wire:model.live="scan" wire:keydown.enter.prevent="handleScan" class="flex-1" placeholder="{{ __('Scan QR or type SKU, then press Enter') }}" />
+                                <flux:button type="button" variant="danger" icon="camera" x-on:click="startScanner()" class="shrink-0 rounded-xl">
+                                    {{ __('Camera') }}
+                                </flux:button>
+                            </div>
+                            <flux:error name="scan" />
+                            <flux:description>{{ __('A successful scan selects the product automatically.') }}</flux:description>
+                        </flux:field>
+                    </div>
+
+                    <div
+                        class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+                        x-show="isScanning"
+                        x-transition.opacity
+                        x-on:keydown.escape.window="stopScanner()"
+                        x-on:click.self="stopScanner()"
+                        style="display: none"
+                    >
+                        <div class="w-full max-w-md rounded-2xl bg-white p-4 shadow-xl dark:bg-[#0E1A15] dark:ring-1 dark:ring-emerald-900/40">
+                            <div class="mb-3 flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-sm font-bold text-[#0D3326] dark:text-emerald-100">
+                                    <flux:icon name="qr-code" class="size-4" />
+                                    <span>{{ __('Scan with camera') }}</span>
+                                </div>
+                                <flux:button type="button" variant="subtle" icon="x-mark" size="sm" class="rounded-lg" x-on:click="stopScanner()"></flux:button>
+                            </div>
+                            <div id="zen-qr-viewport" class="aspect-square w-full overflow-hidden rounded-xl bg-black"></div>
+                            <p class="mt-3 text-center text-sm text-stone-500 dark:text-emerald-300/60">{{ __('Point the camera at a product QR code.') }}</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <flux:field>
                         <flux:label>{{ __('Product') }}</flux:label>
@@ -35,7 +94,7 @@
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <flux:field>
                         <flux:label>{{ __('Quantity') }}</flux:label>
-                        <flux:input type="number" wire:model="quantity" min="1" />
+                        <flux:input id="stock-out-quantity" type="number" wire:model="quantity" min="1" />
                         <flux:error name="quantity" />
                     </flux:field>
 

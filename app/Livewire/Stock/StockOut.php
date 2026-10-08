@@ -25,6 +25,8 @@ class StockOut extends Component
 
     public ?string $notes = null;
 
+    public string $scan = '';
+
     protected function rules(): array
     {
         return [
@@ -46,6 +48,22 @@ class StockOut extends Component
     public function getSelectedSkuProperty(): ?string
     {
         return Product::whereKey($this->product_id)->value('sku');
+    }
+
+    public function handleScan(): void
+    {
+        $product = Product::resolveByScan($this->scan);
+
+        if ($product === null) {
+            $this->addError('scan', __('No active product matches that code.'));
+
+            return;
+        }
+
+        $this->resetErrorBag('scan');
+        $this->scan = '';
+        $this->product_id = $product->id;
+        $this->js("document.getElementById('stock-out-quantity')?.focus()");
     }
 
     public function submit(StockOutProduct $action): void

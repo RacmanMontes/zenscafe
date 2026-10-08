@@ -185,6 +185,21 @@
                     </div>
                 </div>
 
+                <!-- Scan Code -->
+                <div class="cafe-card p-6">
+                    <div class="mb-4 flex items-center gap-2.5">
+                        <span class="flex size-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
+                            <flux:icon name="qr-code" class="size-4" />
+                        </span>
+                        <h2 class="text-base font-bold text-[#0D3326] dark:text-emerald-100">{{ __('Scan Code') }}</h2>
+                    </div>
+                    <div class="flex flex-col items-center gap-3 rounded-xl bg-white p-4 dark:bg-emerald-950/40">
+                        <div class="rounded-xl">{!! app(\App\Services\QrCodeRenderer::class)->render('ZC:'.$product->id, 160) !!}</div>
+                        <p class="font-mono text-xs font-medium text-stone-500 dark:text-emerald-300/60">{{ $product->sku }}</p>
+                        <p class="text-center text-sm text-stone-500 dark:text-emerald-300/60">{{ __('Scan this code at Stock In / Stock Out to select the product automatically.') }}</p>
+                    </div>
+                </div>
+
                 @if($product->cost_per_unit !== null)
                     <div class="cafe-card p-6">
                         <div class="flex items-center gap-2.5 mb-4">

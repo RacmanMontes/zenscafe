@@ -1,4 +1,5 @@
 import ApexCharts from 'apexcharts';
+import './zen-qr-scanner';
 
 window.ApexCharts = ApexCharts;
 

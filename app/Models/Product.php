@@ -149,4 +149,28 @@ class Product extends Model
                     ->orWhereNull('min_stock');
             });
     }
+
+    /**
+     * Resolve an active product from a scanned QR payload or typed SKU.
+     *
+     * QR codes encode the immutable payload "ZC:<product-id>"; typing a human SKU
+     * is still supported. Keeps labels working even if a product's SKU is edited.
+     */
+    public static function resolveByScan(?string $scan): ?Product
+    {
+        if ($scan === null || trim($scan) === '') {
+            return null;
+        }
+
+        $value = strtoupper(trim($scan));
+
+        if (str_starts_with($value, 'ZC:')) {
+            return static::where('status', self::STATUS_ACTIVE)
+                ->find((int) trim(substr($value, 3)));
+        }
+
+        return static::where('status', self::STATUS_ACTIVE)
+            ->whereRaw('UPPER(sku) = ?', [$value])
+            ->first();
+    }
 }
