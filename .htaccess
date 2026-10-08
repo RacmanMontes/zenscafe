@@ -1,0 +1,33 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Deny access to files/directories that sit at this deployment root
+    RewriteRule ^\.env(\.backup|\.production)?$ - [F,L]
+    RewriteRule ^\.git(/|$) - [F,L]
+    RewriteCond %{REQUEST_URI} !^/\.well-known/ [NC]
+    RewriteRule ^\. - [F,L]
+    RewriteCond %{REQUEST_URI} ^/(app|bootstrap|config|database|resources|routes|storage|tests|vendor)($|/) [NC]
+    RewriteRule ^ - [F,L]
+    RewriteRule ^(artisan|composer\.json|composer\.lock|package\.json|package-lock\.json|phpunit\.xml|pint\.json|phpstan\.neon|vite\.config\.js|AGENTS\.md|CLAUDE\.md)$ - [F,L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Map requests to assets inside the application's public directory
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -d
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # Send All Remaining Requests To The Front Controller...
+    RewriteRule ^ public/index.php [L]
+</IfModule>
